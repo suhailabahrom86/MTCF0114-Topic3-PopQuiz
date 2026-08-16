@@ -19,7 +19,11 @@ window.MathJax = {
 };
 </script>
 <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Firebase (Firestore) — replaces the previous Supabase integration -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <style>
 :root{
@@ -267,6 +271,10 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
 .result-stat .label{font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; color:#8a7f7f; font-weight:700;}
 .result-stat .value{font-size:1.15rem; font-weight:800; margin-top:3px;}
 
+.sync-status-line{font-size:0.86rem; font-weight:600; text-align:center; margin-top:14px;}
+.sync-status-line.success{color:#276b27;}
+.sync-status-line.pending{color:#8a3f10;}
+
 /* ---------- Review ---------- */
 .review-item{border:1.6px solid var(--line); border-radius:18px; padding:20px; margin-bottom:16px;}
 .review-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
@@ -290,7 +298,7 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
 .explain-box strong{color:var(--ink);}
 
 /* ---------- Footer utility ---------- */
-.top-actions{display:flex; justify-content:space-between; align-items:center; width:100%; max-width:880px; margin-bottom:8px;}
+.top-actions{display:flex; justify-content:space-between; align-items:center; width:100%; max-width:880px; margin-bottom:8px; gap:12px; flex-wrap:wrap;}
 .small-link{background:none; border:none; color:#8a5a2f; font-weight:700; cursor:pointer; font-size:0.88rem; text-decoration:underline; padding:6px;}
 
 /* ---------- Timer ---------- */
@@ -328,6 +336,15 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
 }
 .btn-danger:hover{transform:translateY(-1px); box-shadow: 0 14px 26px -10px rgba(198,67,43,0.75);}
 .btn-danger:disabled{opacity:0.45; cursor:not-allowed; transform:none; box-shadow:none;}
+
+/* ---------- Cloud status badge ---------- */
+.cloud-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:0.78rem; font-weight:700; padding:6px 13px; border-radius:999px;
+  border:1.4px solid var(--line); background:#fff; color:#6b5f5f; white-space:nowrap;
+}
+.cloud-badge.connected{background:#E8F6E8; color:#276b27; border-color:#bfe3bf;}
+.cloud-badge.local{background:#FFF1E6; color:#8a3f10; border-color:var(--orange);}
 
 /* ---------- Teacher dashboard ---------- */
 .dash-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;}
@@ -367,6 +384,14 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
   border-radius:14px; padding:12px 16px; font-size:0.86rem; font-weight:600; margin-bottom:16px;
 }
 
+/* ---------- Presentation mode ---------- */
+.presentation-mode .hide-in-presentation{display:none !important;}
+.presentation-mode .leader-table{font-size:1.2rem;}
+.presentation-mode .leader-table th{font-size:0.9rem;}
+.presentation-mode .leader-table td{padding:16px 18px;}
+.presentation-mode .dash-stat .value{font-size:1.6rem;}
+.presentation-mode .rank-badge{width:32px; height:32px; font-size:0.95rem;}
+
 /* ---------- Responsive ---------- */
 @media (max-width:600px){
   .card{padding:20px;}
@@ -377,6 +402,7 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
   .dash-stats{grid-template-columns:repeat(2,1fr);}
   .dash-actions{margin-left:0; width:100%;}
   .dash-actions .btn{flex:1;}
+  .presentation-mode .dash-stats{grid-template-columns:repeat(2,1fr);}
 }
 
 .visually-hidden{
@@ -390,7 +416,8 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
 <!-- ============ LANDING SCREEN ============ -->
 <section id="screen-landing" class="screen active">
   <div class="wrap">
-    <div class="top-actions" style="justify-content:flex-end;">
+    <div class="top-actions">
+      <span class="cloud-badge" id="cloud-badge-landing">💻 Local mode</span>
       <button class="teacher-link" id="btn-teacher-access" type="button">Teacher Access</button>
     </div>
     <div class="masthead">
@@ -518,9 +545,9 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
         </div>
       </div>
 
-      <div id="res-sync-status" class="status-line" style="display:none; text-align:center; font-weight:700;"></div>
-      <div class="btn-row" style="justify-content:center;">
-        <button class="btn btn-secondary" id="btn-retry-sync" type="button" style="display:none;">Retry Saving Result</button>
+      <div id="sync-status-line" class="sync-status-line" role="status"></div>
+      <div class="btn-row" id="retry-sync-row" style="justify-content:center; display:none;">
+        <button class="btn btn-secondary" id="btn-retry-sync" type="button">Retry Saving Result</button>
       </div>
 
       <div class="btn-row" style="justify-content:center;">
@@ -561,10 +588,14 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
     <div class="card">
       <div class="top-actions" style="margin-bottom:6px;">
         <h3 style="margin:0;">Leaderboard</h3>
-        <button class="small-link" id="btn-teacher-logout" type="button">Logout Teacher</button>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span class="cloud-badge" id="cloud-badge-teacher">💻 Local mode</span>
+          <button class="btn btn-primary" id="btn-exit-presentation" type="button" style="display:none; padding:8px 16px; font-size:0.85rem;">EXIT PRESENTATION MODE</button>
+          <button class="small-link hide-in-presentation" id="btn-teacher-logout" type="button">Logout Teacher</button>
+        </div>
       </div>
 
-      <div id="dash-supabase-note" class="dash-note" style="display:none;"></div>
+      <div id="dash-cloud-note" class="dash-note" style="display:none;"></div>
 
       <div class="dash-stats">
         <div class="dash-stat"><div class="label">Total Attempts</div><div class="value" id="dash-total">0</div></div>
@@ -574,14 +605,15 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
       </div>
 
       <div class="dash-toolbar">
-        <select id="dash-filter-section" aria-label="Filter by section">
+        <select id="dash-filter-section" class="hide-in-presentation" aria-label="Filter by section">
           <option value="">All Sections</option>
         </select>
-        <input type="text" id="dash-search-name" placeholder="Search student name" aria-label="Search student name">
+        <input type="text" id="dash-search-name" class="hide-in-presentation" placeholder="Search student name" aria-label="Search student name">
         <div class="dash-actions">
           <button class="btn btn-secondary" id="btn-refresh-leaderboard" type="button">Refresh Leaderboard</button>
-          <button class="btn btn-secondary" id="btn-export-csv" type="button">Export CSV</button>
-          <button class="btn btn-danger" id="btn-clear-records" type="button">CLEAR RECORDS</button>
+          <button class="btn btn-secondary hide-in-presentation" id="btn-export-csv" type="button">Export CSV</button>
+          <button class="btn btn-secondary" id="btn-present-mode" type="button">PRESENT LEADERBOARD</button>
+          <button class="btn btn-danger hide-in-presentation" id="btn-clear-records" type="button">CLEAR RECORDS</button>
         </div>
       </div>
 
@@ -596,7 +628,7 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
         </table>
       </div>
       <div id="dash-empty" class="dash-empty" style="display:none;">No leaderboard records yet.</div>
-      <div id="dash-status-line" class="status-line" style="display:none;"></div>
+      <div id="dash-status-line" class="status-line hide-in-presentation" style="display:none;"></div>
     </div>
   </div>
 </section>
@@ -673,28 +705,26 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
 
 /* =========================================================================
    QUESTION BANK — 15 verified MCQs, Topic 3: Polynomial & Rational Functions
-   Every question independently solved and cross-checked with symbolic
-   algebra before inclusion. correct = index (0-3) into options[] BEFORE
-   shuffling. Options are shuffled per-student at quiz start and the mapping
-   is preserved via optionOrder so scoring stays accurate.
-   Coverage: Polynomial Functions, Dividing Polynomials, Remainder Theorem,
-   Factor Theorem, Rational Zeros Theorem, Descartes' Rule of Signs,
-   Real Zeros, Multiplicity, Complex (Conjugate Pair) Zeros,
-   Proper/Improper Rational Functions, and Partial Fraction Decomposition
-   (exactly ONE question, with an irreducible quadratic factor).
+   Selected from a larger verified bank to give balanced coverage of every
+   Topic 3 learning outcome (3.1 - 3.7), with exactly ONE partial-fraction
+   decomposition question (irreducible quadratic factor case). Every
+   question independently solved and cross-checked with symbolic algebra
+   before inclusion. correct = index (0-3) into options[] BEFORE shuffling.
+   Options are shuffled per-student at quiz start and the mapping is
+   preserved via optionOrder so scoring stays accurate.
    ========================================================================= */
 const QUESTIONS = [
 {
   lo:"3.1", diff:"Easy",
-  q:"Consider the polynomial \\(P(x) = 5x^4 - 3x^3 + 2x - 7\\). What are its degree and leading coefficient?",
+  q:"Which of the following expressions is a polynomial function?",
   options:[
-    "Degree 4, leading coefficient 5",
-    "Degree 4, leading coefficient \\(-3\\)",
-    "Degree 3, leading coefficient 5",
-    "Degree 4, leading coefficient \\(-7\\)"
+    "\\(f(x) = 4x^3 - 2\\sqrt{x} + 1\\)",
+    "\\(f(x) = 3x^2 - 5x + 7\\)",
+    "\\(f(x) = \\dfrac{2}{x} + 3x - 1\\)",
+    "\\(f(x) = x^{3/2} - x + 4\\)"
   ],
-  correct:0,
-  explain:"The degree of a polynomial is the highest power of \\(x\\) that appears. Here that is \\(x^4\\), so the degree is 4. The leading coefficient is the coefficient attached to that highest-power term, which is 5. (Note the missing \\(x^2\\) term simply has coefficient 0 — it does not change the degree.)"
+  correct:1,
+  explain:"A polynomial function contains only terms with whole-number (non-negative integer) exponents on the variable. Option B has exponents 2, 1 and 0 — all whole numbers, so it is a polynomial. Option A contains \\(\\sqrt{x}=x^{1/2}\\), Option C contains \\(2/x = 2x^{-1}\\) (a negative exponent), and Option D contains \\(x^{3/2}\\) (a fractional exponent) — none of these are permitted in a polynomial."
 },
 {
   lo:"3.2", diff:"Moderate",
@@ -709,16 +739,28 @@ const QUESTIONS = [
   explain:"Using synthetic division with root \\(2\\) on coefficients \\(2,-3,4,-5\\): bring down 2; \\(2\\times2=4,\\ -3+4=1\\); \\(1\\times2=2,\\ 4+2=6\\); \\(6\\times2=12,\\ -5+12=7\\). This gives quotient \\(Q(x)=2x^2+x+6\\) and remainder \\(R=7\\), so \\(2x^3-3x^2+4x-5=(2x^2+x+6)(x-2)+7\\)."
 },
 {
-  lo:"3.2/3.3", diff:"Moderate",
-  q:"When \\(P(x) = x^3 + kx^2 - 4x + 3\\) is divided by \\((x+1)\\), the remainder is 10. Find the value of \\(k\\).",
+  lo:"3.2", diff:"Moderate",
+  q:"Divide \\(P(x) = 3x^4 - 5x^3 + 2x - 8\\) by \\(D(x) = x^2 - 2\\) and express the result in the form \\(\\dfrac{P(x)}{D(x)} = Q(x) + \\dfrac{R(x)}{D(x)}\\).",
   options:[
-    "\\(k = 4\\)",
-    "\\(k = -4\\)",
-    "\\(k = 6\\)",
-    "\\(k = 16\\)"
+    "\\(3x^2 - 5x + 6 + \\dfrac{-8x+4}{x^2-2}\\)",
+    "\\(3x^2 - 5x + 6 + \\dfrac{8x-4}{x^2-2}\\)",
+    "\\(3x^2 - 5x + 4 + \\dfrac{-8x+4}{x^2-2}\\)",
+    "\\(3x^2 + 5x + 6 + \\dfrac{-8x+4}{x^2-2}\\)"
   ],
   correct:0,
-  explain:"By the Remainder Theorem, the remainder equals \\(P(-1)\\). \\(P(-1) = (-1)^3 + k(-1)^2 - 4(-1) + 3 = -1 + k + 4 + 3 = k + 6\\). Setting this equal to 10: \\(k + 6 = 10 \\Rightarrow k = 4\\)."
+  explain:"Long division: \\(3x^4\\div x^2 = 3x^2\\); subtracting \\(3x^2(x^2-2)\\) leaves \\(-5x^3+6x^2+2x-8\\). Next \\(-5x^3\\div x^2=-5x\\); subtracting \\(-5x(x^2-2)\\) leaves \\(6x^2-8x-8\\). Next \\(6x^2\\div x^2=6\\); subtracting \\(6(x^2-2)\\) leaves \\(-8x+4\\), which has lower degree than \\(D(x)\\), so it is the remainder. Hence \\(Q(x)=3x^2-5x+6\\) and \\(R(x)=-8x+4\\)."
+},
+{
+  lo:"3.3", diff:"Easy",
+  q:"Using the Remainder Theorem, find the remainder when \\(P(x) = 2x^3 + x^2 - 5x + 3\\) is divided by \\((x-1)\\).",
+  options:[
+    "1",
+    "\\(-1\\)",
+    "3",
+    "11"
+  ],
+  correct:0,
+  explain:"By the Remainder Theorem, the remainder equals \\(P(1) = 2(1)^3+(1)^2-5(1)+3 = 2+1-5+3 = 1\\)."
 },
 {
   lo:"3.3", diff:"Moderate",
@@ -743,18 +785,6 @@ const QUESTIONS = [
   ],
   correct:0,
   explain:"By the Remainder Theorem, dividing by \\((x-2)\\) gives remainder \\(P(2)=16+4a-2+5=4a+19\\); dividing by \\((x+1)\\) gives remainder \\(P(-1)=-2+a+1+5=a+4\\). Setting these equal: \\(4a+19 = a+4 \\Rightarrow 3a = -15 \\Rightarrow a = -5\\)."
-},
-{
-  lo:"3.3", diff:"Moderate",
-  q:"Determine whether \\((x-2)\\) is a factor of \\(P(x) = x^4 - 5x^3 + 5x^2 + 5x - 6\\).",
-  options:[
-    "Yes, since \\(P(2) = 0\\)",
-    "No, since \\(P(2) = 4\\)",
-    "Yes, since \\(P(-2) = 0\\)",
-    "No, since \\(P(2) = -6\\)"
-  ],
-  correct:0,
-  explain:"By the Factor Theorem, \\((x-2)\\) is a factor exactly when \\(P(2)=0\\). \\(P(2) = 16 - 40 + 20 + 10 - 6 = 0\\). Since \\(P(2)=0\\), \\((x-2)\\) is indeed a factor of \\(P(x)\\)."
 },
 {
   lo:"3.4", diff:"Moderate",
@@ -841,16 +871,16 @@ const QUESTIONS = [
   explain:"Since coefficients are real, \\(-3i\\) is also a zero, giving the factor \\(x^2+9\\). Dividing \\(P(x)\\) by \\(x^2+9\\) gives quotient \\(x^2-4x+5\\). Solving with the quadratic formula: \\(x = \\dfrac{4 \\pm \\sqrt{16-20}}{2} = \\dfrac{4\\pm2i}{2} = 2\\pm i\\). All zeros are \\(3i,\\ -3i,\\ 2+i,\\ 2-i\\)."
 },
 {
-  lo:"3.6", diff:"Moderate",
-  q:"Convert the improper rational expression \\(\\dfrac{x^3-2x^2+4}{x-3}\\) into the form (polynomial) \\(+\\) (proper fraction).",
+  lo:"3.6", diff:"Easy",
+  q:"Which of the following is an IMPROPER rational function?",
   options:[
-    "\\(x^2+x+3+\\dfrac{13}{x-3}\\)",
-    "\\(x^2+x+3+\\dfrac{13}{x+3}\\)",
-    "\\(x^2-x+3+\\dfrac{13}{x-3}\\)",
-    "\\(x^2+x+3+\\dfrac{4}{x-3}\\)"
+    "\\(\\dfrac{x^2+3}{x^3-1}\\)",
+    "\\(\\dfrac{2x^3-x+1}{x^2+4}\\)",
+    "\\(\\dfrac{5}{x^2+2x+1}\\)",
+    "\\(\\dfrac{x-1}{x^2+x+6}\\)"
   ],
-  correct:0,
-  explain:"Using synthetic division with root 3 on coefficients \\(1,-2,0,4\\): bring down 1; \\(1\\times3=3,\\ -2+3=1\\); \\(1\\times3=3,\\ 0+3=3\\); \\(3\\times3=9,\\ 4+9=13\\). This gives quotient \\(x^2+x+3\\) and remainder 13, so the expression equals \\(x^2+x+3+\\dfrac{13}{x-3}\\)."
+  correct:1,
+  explain:"A rational function is improper when the degree of the numerator is greater than or equal to the degree of the denominator. Option B has numerator degree 3 and denominator degree 2, so it is improper. All the other options have numerator degree strictly less than denominator degree, so they are proper."
 },
 {
   lo:"3.7", diff:"Moderate",
@@ -867,36 +897,37 @@ const QUESTIONS = [
 ];
 
 const TOTAL = QUESTIONS.length; // 15
-const STORAGE_KEY = "mtcf0114_topic3_popquiz_15q_v2";
+const STORAGE_KEY = "mtcf0114_topic3_popquiz_15q_v2"; // bumped version: old 25-question attempts never load into the new 15-question quiz
 const QUIZ_DURATION_SECONDS = 40 * 60; // 40-minute quiz timer
 
-/* ---------------- Teacher access & Supabase config ----------------
+/* ---------------- Teacher access & Firebase (Firestore) config ----------------
    Keep this constant clearly labelled so it can be changed later.
    NOTE: because this is a static front-end app, this code is a
    classroom-level access gate, not cryptographic security — anyone
-   inspecting the page source could recover it. Database deletion is
-   additionally protected by Supabase Row Level Security (see the
-   accompanying SQL instructions), not by this code alone.
+   inspecting the page source could recover it. Leaderboard storage uses
+   Firebase Firestore (see firebase-config.js), reusing the same Firebase
+   project already used by the Functions Exploration V8 app, but writing
+   to its own "topic3_leaderboard" collection so the two apps never mix
+   data.
 ------------------------------------------------------------------- */
 const TEACHER_ACCESS_CODE = "SUHAILA BAHROM 6551";
 
-// TODO: replace with your own Supabase project URL and public anon key.
-// Never put a service-role key here — the anon key is safe for browser use
-// as long as Row Level Security policies are configured correctly.
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-const LEADERBOARD_TABLE = "quiz_results";
+const FIRESTORE_COLLECTION = "topic3_leaderboard";
 
-const supabaseClient = (function(){
-  try{
-    if(window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY &&
-       SUPABASE_URL.indexOf("YOUR_SUPABASE_URL") === -1 &&
-       SUPABASE_ANON_KEY.indexOf("YOUR_SUPABASE_ANON_KEY") === -1){
-      return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-  }catch(e){ console.error("Supabase init failed", e); }
-  return null;
-})();
+let db = null;
+let cloudEnabled = false;
+try{
+  if(window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey &&
+     String(window.FIREBASE_CONFIG.apiKey).indexOf("PASTE_") === -1){
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+    db = firebase.firestore();
+    cloudEnabled = true;
+  }
+}catch(err){
+  console.warn("Firebase unavailable:", err);
+  db = null;
+  cloudEnabled = false;
+}
 
 function normalizeCode(str){
   return (str || "").trim().replace(/\s+/g, " ").toUpperCase();
@@ -928,10 +959,15 @@ function isTeacherViewActive(){
 }
 
 /* ---------------- State management ---------------- */
+function generateAttemptId(){
+  return "attempt_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,10);
+}
+
 function freshState(name, section){
   const optionOrder = QUESTIONS.map(()=> shuffle([0,1,2,3]));
   const now = Date.now();
   return {
+    attemptId: generateAttemptId(),
     name: name, section: section,
     current: 0,
     answers: new Array(TOTAL).fill(null), // stores ORIGINAL option index chosen
@@ -944,13 +980,10 @@ function freshState(name, section){
     endTime: now + QUIZ_DURATION_SECONDS * 1000,
     durationSeconds: null,
     autoSubmitted: false,
+    submissionType: null,
     resultSynced: false,
-    syncRef: null
+    pendingSync: false
   };
-}
-
-function generateSyncRef(){
-  return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
 }
 
 function shuffle(arr){
@@ -1002,6 +1035,20 @@ function typeset(el){
   if(window.MathJax && window.MathJax.typesetPromise){
     window.MathJax.typesetPromise([el]).catch(()=>{});
   }
+}
+
+/* ---------------- Cloud status indicator ---------------- */
+function updateCloudStatusIndicator(){
+  const badges = document.querySelectorAll(".cloud-badge");
+  badges.forEach(function(b){
+    if(cloudEnabled){
+      b.textContent = "☁ Cloud connected";
+      b.className = "cloud-badge connected";
+    }else{
+      b.textContent = "💻 Local mode";
+      b.className = "cloud-badge local";
+    }
+  });
 }
 
 /* ---------------- Landing ---------------- */
@@ -1227,115 +1274,80 @@ function finalizeSubmission(){
   state.score = score;
   state.submitted = true;
   state.submittedAt = Date.now();
+  state.submissionType = state.autoSubmitted ? "timeout" : "manual";
   const rawDuration = Math.round((state.submittedAt - state.startTime)/1000);
   state.durationSeconds = Math.min(Math.max(rawDuration, 0), QUIZ_DURATION_SECONDS);
   saveState();
   renderResults();
   showScreen("results");
-  syncResultToSupabase();
+  syncResultToFirestore();
 }
 
-/* ---------------- Reliable result saving (queue + retry) ----------------
-   A single unconfirmed insert attempt is not reliable: a dropped connection,
-   a slow network, or Supabase being temporarily unreachable would otherwise
-   silently lose that student's result. Every submitted result is therefore
-   first recorded in a local "pending" queue (localStorage, this device only)
-   tagged with a unique syncRef. The queue is flushed to Supabase: 
-     - immediately after submission,
-     - again automatically on every page load/reopen on this device,
-     - and on demand if the student taps "Retry Saving Result".
-   A queued item is only removed once Supabase confirms the insert succeeded,
-   so a result can never be "saved" from the student's point of view while
-   still missing from the teacher's leaderboard.
-------------------------------------------------------------------------- */
-const PENDING_RESULTS_KEY = "mtcf0114_pending_results_15q_v2";
-
-function loadPendingResults(){
-  try{
-    const raw = localStorage.getItem(PENDING_RESULTS_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  }catch(e){ return []; }
-}
-function savePendingResults(list){
-  try{ localStorage.setItem(PENDING_RESULTS_KEY, JSON.stringify(list)); }catch(e){}
-}
-
-async function flushPendingResults(){
-  if(!supabaseClient) return;
-  const queue = loadPendingResults();
-  if(!queue.length) return;
-  const stillPending = [];
-  for(const item of queue){
-    try{
-      const { error } = await supabaseClient.from(LEADERBOARD_TABLE).insert([item.payload]);
-      if(error){
-        console.error("Supabase insert error", error);
-        stillPending.push(item);
-      }
-    }catch(e){
-      console.error("Supabase insert failed", e);
-      stillPending.push(item);
-    }
-  }
-  savePendingResults(stillPending);
-}
-
-async function syncResultToSupabase(){
-  if(state.resultSynced) return;
-  if(!state.syncRef){ state.syncRef = generateSyncRef(); saveState(); }
-
-  const payload = {
-    student_name: state.name,
-    section: state.section,
-    score: state.score,
-    total_questions: TOTAL,
-    percentage: Math.round((state.score/TOTAL)*100),
-    duration_seconds: state.durationSeconds,
-    submitted_at: new Date(state.submittedAt).toISOString()
-  };
-
-  // Record this attempt in the pending queue exactly once before trying to send it.
-  let queue = loadPendingResults();
-  if(!queue.some(item=>item.id===state.syncRef)){
-    queue.push({ id: state.syncRef, payload: payload });
-    savePendingResults(queue);
-  }
-
-  updateSyncStatusUI("syncing");
-  await flushPendingResults();
-
-  queue = loadPendingResults();
-  if(!queue.some(item=>item.id===state.syncRef)){
-    state.resultSynced = true;
+async function syncResultToFirestore(){
+  if(!state || !state.submitted || state.resultSynced) return;
+  if(!cloudEnabled || !db){
+    state.pendingSync = true;
     saveState();
-    updateSyncStatusUI("synced");
+    updateSyncStatusUI();
+    return;
+  }
+  try{
+    const payload = {
+      attemptId: state.attemptId,
+      studentName: state.name,
+      section: state.section,
+      score: state.score,
+      totalQuestions: TOTAL,
+      percentage: Math.round((state.score/TOTAL)*100),
+      answeredCount: answeredCount(),
+      startedAt: new Date(state.startTime).toISOString(),
+      submittedAt: new Date(state.submittedAt).toISOString(),
+      durationSeconds: state.durationSeconds,
+      submissionType: state.submissionType || (state.autoSubmitted ? "timeout" : "manual"),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    await db.collection(FIRESTORE_COLLECTION).doc(state.attemptId).set(payload, { merge:true });
+    state.resultSynced = true;
+    state.pendingSync = false;
+    saveState();
+  }catch(e){
+    console.error("Firestore sync failed", e);
+    state.pendingSync = true;
+    saveState();
+  }
+  updateSyncStatusUI();
+}
+
+window.addEventListener("online", function(){
+  if(state && state.submitted && !state.resultSynced){
+    syncResultToFirestore();
+  }
+});
+
+function updateSyncStatusUI(){
+  const line = document.getElementById("sync-status-line");
+  const retryRow = document.getElementById("retry-sync-row");
+  if(!line || !retryRow) return;
+  if(!state || !state.submitted){
+    line.textContent = "";
+    line.className = "sync-status-line";
+    retryRow.style.display = "none";
+    return;
+  }
+  if(state.resultSynced){
+    line.textContent = "\u2713 Result saved to the leaderboard.";
+    line.className = "sync-status-line success";
+    retryRow.style.display = "none";
   }else{
-    updateSyncStatusUI("queued");
+    line.textContent = "Your result is saved on this device and will sync automatically when the cloud connection is available.";
+    line.className = "sync-status-line pending";
+    retryRow.style.display = "flex";
   }
 }
 
-function updateSyncStatusUI(status){
-  const el = document.getElementById("res-sync-status");
-  const btn = document.getElementById("btn-retry-sync");
-  if(!el) return;
-  el.style.display = "block";
-  if(status === "syncing"){
-    el.textContent = "Saving your result to the leaderboard…";
-    el.style.color = "#8a7f7f";
-    if(btn) btn.style.display = "none";
-  } else if(status === "synced"){
-    el.textContent = "\u2713 Result saved to the leaderboard.";
-    el.style.color = "#276b27";
-    if(btn) btn.style.display = "none";
-  } else if(status === "queued"){
-    el.textContent = supabaseClient
-      ? "\u26A0 Couldn't reach the server. Your result is saved on this device and will sync automatically — you can also retry now."
-      : "\u26A0 Leaderboard sync is not configured yet. Your result is saved on this device only and cannot reach the teacher's leaderboard until Supabase is set up.";
-    el.style.color = "#8a3f10";
-    if(btn) btn.style.display = "inline-block";
-  }
-}
+document.getElementById("btn-retry-sync").addEventListener("click", function(){
+  syncResultToFirestore();
+});
 
 function renderResults(){
   const score = state.score;
@@ -1363,30 +1375,13 @@ function renderResults(){
       autoNote.style.cssText = "text-align:center; font-size:0.86rem; color:#8a3f10; font-weight:600; margin-top:10px;";
       msgEl.insertAdjacentElement("afterend", autoNote);
     }
-    autoNote.textContent = "Time expired — your quiz was submitted automatically.";
+    autoNote.textContent = "Time expired after 40 minutes — your quiz was submitted automatically.";
   } else if(autoNote){
     autoNote.remove();
   }
 
-  // Reflect the current save status (e.g. when returning to this screen after a reload).
-  if(state.resultSynced){
-    updateSyncStatusUI("synced");
-  }else{
-    const queue = loadPendingResults();
-    const isQueued = state.syncRef && queue.some(item=>item.id===state.syncRef);
-    updateSyncStatusUI(isQueued ? "queued" : "syncing");
-  }
+  updateSyncStatusUI();
 }
-
-document.getElementById("btn-retry-sync").addEventListener("click", async function(){
-  const btn = this;
-  btn.disabled = true;
-  const originalLabel = btn.textContent;
-  btn.textContent = "Retrying…";
-  await syncResultToSupabase();
-  btn.disabled = false;
-  btn.textContent = originalLabel;
-});
 
 document.getElementById("btn-show-review").addEventListener("click", function(){
   renderReview();
@@ -1501,11 +1496,30 @@ function enterTeacherDashboard(){
 btnTeacherLogout.addEventListener("click", function(){
   setTeacherUnlocked(false);
   setTeacherViewActive(false);
+  exitPresentationMode();
   showScreen("landing");
 });
 
+/* ---------------- Presentation mode ---------------- */
+const screenTeacherEl = document.getElementById("screen-teacher");
+const btnPresentMode = document.getElementById("btn-present-mode");
+const btnExitPresentation = document.getElementById("btn-exit-presentation");
+
+function exitPresentationMode(){
+  screenTeacherEl.classList.remove("presentation-mode");
+  btnExitPresentation.style.display = "none";
+}
+
+btnPresentMode.addEventListener("click", function(){
+  screenTeacherEl.classList.add("presentation-mode");
+  btnExitPresentation.style.display = "inline-block";
+});
+btnExitPresentation.addEventListener("click", function(){
+  exitPresentationMode();
+});
+
 /* ---------------- Teacher dashboard: leaderboard ---------------- */
-const dashSupabaseNote = document.getElementById("dash-supabase-note");
+const dashCloudNote = document.getElementById("dash-cloud-note");
 const dashTotal = document.getElementById("dash-total");
 const dashHighest = document.getElementById("dash-highest");
 const dashAverage = document.getElementById("dash-average");
@@ -1517,49 +1531,45 @@ const dashEmpty = document.getElementById("dash-empty");
 const dashStatusLine = document.getElementById("dash-status-line");
 const leaderTable = document.getElementById("leader-table");
 
-let leaderboardData = []; // raw rows fetched from Supabase
+let leaderboardData = []; // raw rows fetched from Firestore
 
 function formatDuration(sec){
   if(sec===null || sec===undefined) return "–";
   return formatClock(sec);
 }
-function formatSubmittedAt(iso){
-  if(!iso) return "–";
+function formatSubmittedAt(val){
+  if(!val) return "–";
   try{
-    return new Date(iso).toLocaleString();
-  }catch(e){ return iso; }
+    if(typeof val === "object" && typeof val.toDate === "function") return val.toDate().toLocaleString();
+    return new Date(val).toLocaleString();
+  }catch(e){ return String(val); }
 }
 
 async function refreshLeaderboard(){
-  dashSupabaseNote.style.display = "none";
-  if(!supabaseClient){
+  dashCloudNote.style.display = "none";
+  if(!cloudEnabled || !db){
     leaderboardData = [];
-    dashSupabaseNote.textContent = "Supabase is not configured yet. Add your project URL and anon key in the SUPABASE_URL / SUPABASE_ANON_KEY constants to enable the live leaderboard.";
-    dashSupabaseNote.style.display = "block";
+    dashCloudNote.textContent = "Local mode: Firebase is not configured, so no cloud leaderboard records are available. Add your project details in firebase-config.js to enable the live leaderboard.";
+    dashCloudNote.style.display = "block";
+    populateSectionFilter();
     renderLeaderboardTable();
+    updateCloudStatusIndicator();
     return;
   }
   try{
-    const { data, error } = await supabaseClient
-      .from(LEADERBOARD_TABLE)
-      .select("*")
-      .order("score", { ascending:false })
-      .order("duration_seconds", { ascending:true })
-      .order("submitted_at", { ascending:true });
-    if(error){
-      dashSupabaseNote.textContent = "Unable to load leaderboard records. Please try refreshing.";
-      dashSupabaseNote.style.display = "block";
-      leaderboardData = [];
-    }else{
-      leaderboardData = data || [];
-    }
+    const snap = await db.collection(FIRESTORE_COLLECTION).get();
+    leaderboardData = snap.docs.map(function(doc){
+      return Object.assign({ id: doc.id }, doc.data());
+    });
   }catch(e){
-    dashSupabaseNote.textContent = "Unable to load leaderboard records. Please try refreshing.";
-    dashSupabaseNote.style.display = "block";
+    console.error("Firestore load error", e);
+    dashCloudNote.textContent = "Unable to load leaderboard records. Please try refreshing.";
+    dashCloudNote.style.display = "block";
     leaderboardData = [];
   }
   populateSectionFilter();
   renderLeaderboardTable();
+  updateCloudStatusIndicator();
 }
 
 function populateSectionFilter(){
@@ -1581,13 +1591,13 @@ function getFilteredSortedRows(){
   const nameFilter = dashSearchName.value.trim().toLowerCase();
   let rows = leaderboardData.slice();
   if(sectionFilter) rows = rows.filter(r => r.section === sectionFilter);
-  if(nameFilter) rows = rows.filter(r => (r.student_name||"").toLowerCase().indexOf(nameFilter) !== -1);
+  if(nameFilter) rows = rows.filter(r => (r.studentName||"").toLowerCase().indexOf(nameFilter) !== -1);
   rows.sort(function(a,b){
-    if(b.score !== a.score) return b.score - a.score;
-    const da = a.duration_seconds==null ? Infinity : a.duration_seconds;
-    const db = b.duration_seconds==null ? Infinity : b.duration_seconds;
-    if(da !== db) return da - db;
-    return new Date(a.submitted_at) - new Date(b.submitted_at);
+    if((b.score||0) !== (a.score||0)) return (b.score||0) - (a.score||0);
+    const da = a.durationSeconds==null ? Infinity : a.durationSeconds;
+    const db_ = b.durationSeconds==null ? Infinity : b.durationSeconds;
+    if(da !== db_) return da - db_;
+    return new Date(a.submittedAt||0) - new Date(b.submittedAt||0);
   });
   return rows;
 }
@@ -1597,8 +1607,8 @@ function renderLeaderboardTable(){
 
   dashTotal.textContent = leaderboardData.length;
   if(leaderboardData.length){
-    const highest = Math.max.apply(null, leaderboardData.map(r=>r.score));
-    const avg = leaderboardData.reduce((s,r)=>s+r.score,0) / leaderboardData.length;
+    const highest = Math.max.apply(null, leaderboardData.map(r=>r.score||0));
+    const avg = leaderboardData.reduce((s,r)=>s+(r.score||0),0) / leaderboardData.length;
     dashHighest.textContent = highest + " / " + TOTAL;
     dashAverage.textContent = avg.toFixed(1) + " / " + TOTAL;
   }else{
@@ -1619,19 +1629,20 @@ function renderLeaderboardTable(){
   rows.forEach(function(r, i){
     const rank = i+1;
     const tr = document.createElement("tr");
-    const pct = r.percentage != null ? r.percentage : Math.round((r.score/(r.total_questions||TOTAL))*100);
+    const total = r.totalQuestions || TOTAL;
+    const pct = r.percentage != null ? r.percentage : Math.round(((r.score||0)/total)*100);
     let rankClass = "rank-badge";
     if(rank===1) rankClass += " rank-1";
     else if(rank===2) rankClass += " rank-2";
     else if(rank===3) rankClass += " rank-3";
     tr.innerHTML =
       '<td><span class="'+rankClass+'">'+rank+'</span></td>' +
-      '<td>'+escapeHtml(r.student_name||"–")+'</td>' +
+      '<td>'+escapeHtml(r.studentName||"–")+'</td>' +
       '<td>'+escapeHtml(r.section||"–")+'</td>' +
-      '<td>'+r.score+' / '+(r.total_questions||TOTAL)+'</td>' +
+      '<td>'+(r.score||0)+' / '+total+'</td>' +
       '<td>'+pct+'%</td>' +
-      '<td>'+formatDuration(r.duration_seconds)+'</td>' +
-      '<td>'+formatSubmittedAt(r.submitted_at)+'</td>';
+      '<td>'+formatDuration(r.durationSeconds)+'</td>' +
+      '<td>'+formatSubmittedAt(r.submittedAt)+'</td>';
     leaderTbody.appendChild(tr);
   });
 }
@@ -1642,19 +1653,22 @@ dashSearchName.addEventListener("input", renderLeaderboardTable);
 
 document.getElementById("btn-export-csv").addEventListener("click", function(){
   const rows = getFilteredSortedRows();
-  const header = ["Rank","Student Name","Section","Score","Total","Percentage","Duration (s)","Submitted At"];
+  const header = ["Rank","Student Name","Section","Score","Total","Percentage","Duration (s)","Started At","Submitted At","Submission Type"];
   const lines = [header.join(",")];
   rows.forEach(function(r,i){
-    const pct = r.percentage != null ? r.percentage : Math.round((r.score/(r.total_questions||TOTAL))*100);
+    const total = r.totalQuestions || TOTAL;
+    const pct = r.percentage != null ? r.percentage : Math.round(((r.score||0)/total)*100);
     const line = [
       i+1,
-      '"'+String(r.student_name||"").replace(/"/g,'""')+'"',
+      '"'+String(r.studentName||"").replace(/"/g,'""')+'"',
       '"'+String(r.section||"").replace(/"/g,'""')+'"',
-      r.score,
-      r.total_questions||TOTAL,
+      r.score||0,
+      total,
       pct,
-      r.duration_seconds!=null ? r.duration_seconds : "",
-      r.submitted_at||""
+      r.durationSeconds!=null ? r.durationSeconds : "",
+      r.startedAt||"",
+      r.submittedAt||"",
+      r.submissionType||""
     ].join(",");
     lines.push(line);
   });
@@ -1718,17 +1732,27 @@ modalClear2Confirm.addEventListener("click", async function(){
 });
 
 async function clearAllRecords(){
-  if(!supabaseClient) return { ok:false };
+  if(!cloudEnabled || !db) return { ok:false };
   try{
-    const { error } = await supabaseClient.from(LEADERBOARD_TABLE).delete().neq("id", 0);
-    return { ok: !error };
+    const snap = await db.collection(FIRESTORE_COLLECTION).get();
+    const docs = snap.docs;
+    const BATCH_SIZE = 400; // stay well under Firestore's 500-write batch limit
+    for(let i=0;i<docs.length;i+=BATCH_SIZE){
+      const batch = db.batch();
+      docs.slice(i, i+BATCH_SIZE).forEach(function(d){ batch.delete(d.ref); });
+      await batch.commit();
+    }
+    return { ok:true };
   }catch(e){
+    console.error("Clear records failed", e);
     return { ok:false };
   }
 }
 
 /* ---------------- Boot ---------------- */
 function boot(){
+  updateCloudStatusIndicator();
+
   if(isTeacherUnlocked() && isTeacherViewActive()){
     showScreen("teacher");
     refreshLeaderboard();
@@ -1737,6 +1761,7 @@ function boot(){
   if(state && state.submitted){
     renderResults();
     showScreen("results");
+    if(!state.resultSynced){ syncResultToFirestore(); }
   } else if(state && state.started){
     // Guard against a stale/missing endTime from an older saved session
     if(!state.endTime){ state.endTime = Date.now() + QUIZ_DURATION_SECONDS*1000; saveState(); }
@@ -1746,21 +1771,6 @@ function boot(){
   } else {
     showScreen("landing");
   }
-
-  // Retry any result from this device that didn't make it to the leaderboard
-  // last time (e.g. the student closed the tab before the network call
-  // finished). Runs quietly in the background regardless of which screen
-  // is showing.
-  flushPendingResults().then(function(){
-    if(state && state.submitted && !state.resultSynced && state.syncRef){
-      const queue = loadPendingResults();
-      if(!queue.some(item=>item.id===state.syncRef)){
-        state.resultSynced = true;
-        saveState();
-        if(screens.results.classList.contains("active")) updateSyncStatusUI("synced");
-      }
-    }
-  });
 }
 
 boot();
