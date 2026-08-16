@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>MTCF 0114 — Topic 3 Pop Quiz | Polynomial &amp; Rational Functions</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']]
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --peach:#FFD6BA;
+  --orange:#FF9F68;
+  --yellow:#FFE8A3;
+  --pink:#F7B2C4;
+  --cream:#FFF9F3;
+  --ink:#352F2F;
+  --orange-deep:#E8823E;
+  --line:rgba(53,47,47,0.14);
+  --card:#ffffff;
+  --radius:22px;
+  --danger:#C6432B;
+  --danger-deep:#A63520;
+  --danger-bg:#FDECE7;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(1100px 600px at 12% -10%, rgba(255,214,186,0.55), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(247,178,196,0.4), transparent 55%),
+    var(--cream);
+  color:var(--ink);
+  font-family:'Figtree', system-ui, sans-serif;
+  min-height:100vh;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
+
+.screen{display:none; width:100%; min-height:100vh; padding: 28px 18px 60px;}
+.screen.active{display:flex; flex-direction:column; align-items:center;}
+
+.wrap{width:100%; max-width:880px;}
+
+/* ---------- Header / motif ---------- */
+.masthead{
+  position:relative;
+  width:100%; max-width:880px;
+  border-radius: var(--radius);
+  padding: 34px 30px 28px;
+  margin-bottom: 22px;
+  background: linear-gradient(135deg, var(--peach) 0%, var(--orange) 55%, var(--pink) 100%);
+  color:#3a2317;
+  overflow:hidden;
+  box-shadow: 0 18px 40px -18px rgba(232,130,62,0.55);
+}
+.masthead .motif{
+  position:absolute; inset:0; pointer-events:none;
+  font-family:'Fraunces', serif;
+  color: rgba(255,255,255,0.28);
+  font-weight:600;
+}
+.motif span{position:absolute; font-style:italic;}
+.motif .m1{top:8%; left:4%; font-size:2.6rem; transform:rotate(-8deg);}
+.motif .m2{top:55%; left:82%; font-size:3.2rem; transform:rotate(6deg);}
+.motif .m3{bottom:6%; left:12%; font-size:1.7rem; transform:rotate(4deg);}
+.motif .m4{top:12%; right:8%; font-size:1.9rem;}
+.motif .m5{bottom:14%; right:26%; font-size:2.1rem; transform:rotate(-10deg);}
+
+.eyebrow{
+  position:relative; z-index:1;
+  font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+  font-weight:700; opacity:0.85; margin-bottom:6px;
+}
+.masthead h1{
+  position:relative; z-index:1;
+  margin:0 0 4px; font-size:clamp(1.5rem, 4vw, 2.15rem); font-weight:700; line-height:1.15;
+}
+.masthead .sub{
+  position:relative; z-index:1;
+  font-size:1.02rem; font-weight:500; opacity:0.92;
+}
+.masthead .tag{
+  position:relative; z-index:1;
+  display:inline-block; margin-top:14px;
+  background:rgba(255,255,255,0.55);
+  padding:6px 14px; border-radius:999px;
+  font-size:0.82rem; font-weight:700; letter-spacing:0.04em;
+  color:#3a2317;
+}
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding: 28px;
+  box-shadow: 0 14px 34px -22px rgba(53,47,47,0.35);
+  border:1px solid var(--line);
+  width:100%;
+}
+.card + .card{margin-top:18px;}
+
+/* ---------- Landing form ---------- */
+.field{margin-bottom:18px;}
+.field label{display:block; font-weight:700; font-size:0.92rem; margin-bottom:7px; color:var(--ink);}
+.field input{
+  width:100%; padding:13px 15px; border-radius:14px;
+  border:1.6px solid var(--line); background:#FFFDF9;
+  font-family:'Figtree'; font-size:1rem; color:var(--ink);
+  transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus{
+  outline:none; border-color:var(--orange-deep);
+  box-shadow: 0 0 0 4px rgba(255,159,104,0.25);
+}
+.validation-msg{
+  display:none; background:#FFF1E6; border:1.4px solid var(--orange); color:#9a4a15;
+  padding:10px 14px; border-radius:12px; font-size:0.9rem; font-weight:600; margin-bottom:16px;
+}
+
+.instructions-list{margin:0; padding-left:1.15em; font-size:0.94rem;}
+.instructions-list li{margin-bottom:6px;}
+
+.btn{
+  appearance:none; border:none; cursor:pointer;
+  font-family:'Figtree'; font-weight:700; font-size:1rem;
+  padding:14px 26px; border-radius:14px;
+  transition: transform .12s ease, box-shadow .12s ease, background .15s ease;
+}
+.btn:focus-visible{outline:3px solid #8a4413; outline-offset:2px;}
+.btn-primary{
+  background: linear-gradient(135deg, var(--orange-deep), var(--orange));
+  color:#fff; box-shadow: 0 10px 22px -10px rgba(232,130,62,0.75);
+}
+.btn-primary:hover{transform:translateY(-1px); box-shadow: 0 14px 26px -10px rgba(232,130,62,0.85);}
+.btn-secondary{
+  background:#fff; color:var(--ink); border:1.6px solid var(--line);
+}
+.btn-secondary:hover{border-color:var(--orange-deep); background:#FFF6EE;}
+.btn-ghost{
+  background:transparent; color:var(--orange-deep); border:1.6px solid var(--orange);
+}
+.btn-ghost:hover{background:#FFF1E6;}
+.btn-block{width:100%; text-align:center;}
+.btn-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px;}
+.btn:disabled{opacity:0.5; cursor:not-allowed; transform:none;}
+
+/* ---------- Quiz top bar ---------- */
+.quiz-topbar{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  gap:16px; margin-bottom:16px; flex-wrap:wrap;
+}
+.q-count{font-weight:800; font-size:1.05rem;}
+.q-meta{font-size:0.85rem; color:#7a6f6f; font-weight:600;}
+
+.progress-outer{
+  width:100%; height:12px; border-radius:999px; background:#F2E4D6;
+  overflow:hidden; margin-bottom:22px; border:1px solid var(--line);
+}
+.progress-inner{
+  height:100%; border-radius:999px;
+  background: linear-gradient(90deg, var(--peach), var(--orange-deep));
+  transition: width .3s ease;
+}
+
+/* ---------- Navigator ---------- */
+.navigator{
+  display:grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+  gap:8px; margin: 4px 0 4px;
+}
+.nav-btn{
+  aspect-ratio:1/1; border-radius:10px; border:1.6px solid var(--line);
+  background:#fff; font-weight:700; font-size:0.85rem; color:var(--ink);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition: all .12s ease;
+}
+.nav-btn:hover{border-color:var(--orange-deep);}
+.nav-btn.answered{background:var(--yellow); border-color:#E8C25E;}
+.nav-btn.current{background:var(--orange-deep); color:#fff; border-color:var(--orange-deep);}
+.nav-btn:focus-visible{outline:3px solid #8a4413; outline-offset:1px;}
+
+.navigator-card{margin-bottom:18px;}
+.navigator-legend{display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; font-size:0.8rem; color:#7a6f6f; font-weight:600;}
+.legend-dot{display:inline-block; width:11px; height:11px; border-radius:4px; margin-right:5px; vertical-align:-1px; border:1.4px solid var(--line);}
+
+/* ---------- Question card ---------- */
+.q-badge{
+  display:inline-block; background:var(--pink); color:#6b1f39; font-weight:800;
+  font-size:0.76rem; letter-spacing:0.06em; text-transform:uppercase;
+  padding:5px 12px; border-radius:999px; margin-bottom:14px;
+}
+.q-text{font-size:1.12rem; font-weight:600; margin:0 0 22px; line-height:1.55;}
+.q-text .MathJax{font-size:105% !important;}
+
+.options{display:flex; flex-direction:column; gap:12px;}
+.option{
+  display:flex; align-items:flex-start; gap:13px;
+  border:1.8px solid var(--line); border-radius:16px;
+  padding:14px 16px; cursor:pointer; background:#FFFDF9;
+  transition: border-color .13s, background .13s;
+}
+.option:hover{border-color:var(--orange); background:#FFF6EE;}
+.option input{margin-top:4px; accent-color:var(--orange-deep); width:18px; height:18px; flex-shrink:0;}
+.option.selected{border-color:var(--orange-deep); background:#FFEEDD; box-shadow:0 0 0 3px rgba(255,159,104,0.18);}
+.option label{cursor:pointer; flex:1; font-size:0.99rem; overflow-wrap:anywhere;}
+.opt-letter{font-weight:800; color:var(--orange-deep); margin-right:6px;}
+
+.quiz-nav-buttons{display:flex; justify-content:space-between; gap:12px; margin-top:26px; flex-wrap:wrap;}
+
+/* ---------- Banners ---------- */
+.banner{
+  border-radius:16px; padding:14px 18px; font-weight:600; font-size:0.94rem;
+  margin-bottom:16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.banner-warn{background:#FFF1E6; border:1.6px solid var(--orange); color:#8a3f10;}
+.banner-warn .btn-row{margin-top:8px; margin-left:auto;}
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(53,47,47,0.45);
+  display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
+}
+.modal-overlay.active{display:flex;}
+.modal-box{
+  background:#fff; border-radius:20px; padding:28px; max-width:420px; width:100%;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,0.4); text-align:center;
+}
+.modal-box h3{margin:0 0 10px;}
+.modal-box p{margin:0 0 20px; color:#5a5050; font-size:0.95rem;}
+.modal-btns{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+
+/* ---------- Results ---------- */
+.result-hero{text-align:center; padding:10px 8px 4px;}
+.result-hero h2{font-size:1.7rem; margin:0 0 6px;}
+.result-sub{color:#6b6060; font-weight:600; margin-bottom:22px;}
+.score-ring-wrap{display:flex; justify-content:center; margin:18px 0 22px;}
+.score-big{font-family:'Fraunces', serif; font-size:3rem; font-weight:700; color:var(--orange-deep);}
+.score-pct{font-size:1.15rem; font-weight:700; color:#7a6f6f;}
+.perf-msg{
+  text-align:center; font-weight:700; font-size:1.05rem; padding:14px 18px;
+  border-radius:16px; margin: 6px 0 6px;
+}
+.perf-excellent{background:#E8F6E8; color:#276b27;}
+.perf-good{background:var(--yellow); color:#7a5a06;}
+.perf-keep{background:var(--peach); color:#8a3f10;}
+.perf-more{background:var(--pink); color:#7a2743;}
+
+.result-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0;}
+.result-stat{background:#FFF9F3; border:1.4px solid var(--line); border-radius:14px; padding:14px 16px;}
+.result-stat .label{font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; color:#8a7f7f; font-weight:700;}
+.result-stat .value{font-size:1.15rem; font-weight:800; margin-top:3px;}
+
+/* ---------- Review ---------- */
+.review-item{border:1.6px solid var(--line); border-radius:18px; padding:20px; margin-bottom:16px;}
+.review-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
+.status-chip{font-weight:800; font-size:0.82rem; padding:5px 12px; border-radius:999px; display:flex; align-items:center; gap:6px;}
+.status-correct{background:#E8F6E8; color:#276b27;}
+.status-incorrect{background:#FDEAEA; color:#a4293e;}
+.review-option{
+  border:1.6px solid var(--line); border-radius:12px; padding:10px 13px; margin-bottom:8px;
+  font-size:0.94rem; display:flex; gap:8px; align-items:flex-start;
+}
+.review-option.your-correct{border-color:#5fa85f; background:#F1FAF1;}
+.review-option.your-wrong{border-color:#d16a6a; background:#FDF1F1;}
+.review-option.the-correct{border-color:#5fa85f; background:#F1FAF1;}
+.review-tag{font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; padding:2px 8px; border-radius:999px; flex-shrink:0;}
+.tag-your{background:#FDEAEA; color:#a4293e;}
+.tag-correct{background:#E8F6E8; color:#276b27;}
+.explain-box{
+  background:#FFF9F3; border-left:4px solid var(--orange-deep); border-radius:10px;
+  padding:12px 15px; font-size:0.93rem; margin-top:10px; color:#4a3f3f;
+}
+.explain-box strong{color:var(--ink);}
+
+/* ---------- Footer utility ---------- */
+.top-actions{display:flex; justify-content:space-between; align-items:center; width:100%; max-width:880px; margin-bottom:8px;}
+.small-link{background:none; border:none; color:#8a5a2f; font-weight:700; cursor:pointer; font-size:0.88rem; text-decoration:underline; padding:6px;}
+
+/* ---------- Timer ---------- */
+.timer-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:#fff; border:1.8px solid var(--line); border-radius:999px;
+  padding:8px 16px; font-weight:800; font-size:0.98rem; color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.timer-pill.warn{border-color:var(--orange-deep); background:#FFF1E6; color:#8a3f10;}
+.timer-pill.danger{border-color:var(--danger); background:var(--danger-bg); color:var(--danger-deep); animation:pulse-timer 1s infinite;}
+@keyframes pulse-timer{0%,100%{opacity:1;} 50%{opacity:0.6;}}
+
+/* ---------- Teacher access ---------- */
+.teacher-link{
+  background:none; border:1.6px solid rgba(53,47,47,0.2); color:#6b5f5f;
+  font-weight:700; cursor:pointer; font-size:0.82rem; padding:7px 14px;
+  border-radius:999px; transition: all .12s ease;
+}
+.teacher-link:hover{border-color:var(--orange-deep); color:var(--orange-deep); background:#FFF6EE;}
+
+.field-error{
+  display:none; background:var(--danger-bg); border:1.4px solid var(--danger); color:var(--danger-deep);
+  padding:9px 13px; border-radius:12px; font-size:0.87rem; font-weight:600; margin-top:10px;
+}
+.field-success{
+  display:none; background:#E8F6E8; border:1.4px solid #5fa85f; color:#276b27;
+  padding:9px 13px; border-radius:12px; font-size:0.87rem; font-weight:600; margin-top:10px;
+}
+
+/* ---------- Danger / warning button ---------- */
+.btn-danger{
+  background: linear-gradient(135deg, var(--danger-deep), var(--danger));
+  color:#fff; box-shadow: 0 10px 22px -10px rgba(198,67,43,0.6);
+}
+.btn-danger:hover{transform:translateY(-1px); box-shadow: 0 14px 26px -10px rgba(198,67,43,0.75);}
+.btn-danger:disabled{opacity:0.45; cursor:not-allowed; transform:none; box-shadow:none;}
+
+/* ---------- Teacher dashboard ---------- */
+.dash-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;}
+.dash-stat{background:#FFF9F3; border:1.4px solid var(--line); border-radius:14px; padding:14px 16px;}
+.dash-stat .label{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:#8a7f7f; font-weight:700;}
+.dash-stat .value{font-size:1.3rem; font-weight:800; margin-top:4px; font-family:'Fraunces', serif;}
+
+.dash-toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:18px;}
+.dash-toolbar input, .dash-toolbar select{
+  padding:10px 13px; border-radius:12px; border:1.6px solid var(--line);
+  background:#FFFDF9; font-family:'Figtree'; font-size:0.92rem; color:var(--ink);
+}
+.dash-toolbar input:focus, .dash-toolbar select:focus{outline:none; border-color:var(--orange-deep);}
+.dash-actions{display:flex; gap:10px; flex-wrap:wrap; margin-left:auto;}
+
+.table-scroll{width:100%; overflow-x:auto; border-radius:14px; border:1.4px solid var(--line);}
+.leader-table{width:100%; border-collapse:collapse; font-size:0.92rem; min-width:640px;}
+.leader-table th{
+  background:var(--peach); color:#5a3419; text-align:left; padding:11px 14px;
+  font-weight:800; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em;
+  white-space:nowrap;
+}
+.leader-table td{padding:11px 14px; border-top:1px solid var(--line); white-space:nowrap;}
+.leader-table tr:nth-child(even) td{background:#FFFBF6;}
+.rank-badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:50%; background:var(--yellow);
+  font-weight:800; font-size:0.82rem; color:#7a5a06;
+}
+.rank-1{background:#FFD966; color:#7a5205;}
+.rank-2{background:#E3E3E3; color:#555;}
+.rank-3{background:#E8B589; color:#6b3a12;}
+.dash-empty{text-align:center; padding:34px 16px; color:#8a7f7f; font-weight:600;}
+.status-line{font-size:0.85rem; color:#8a7f7f; font-weight:600; margin-top:10px;}
+.dash-note{
+  background:#FFF1E6; border:1.4px solid var(--orange); color:#8a3f10;
+  border-radius:14px; padding:12px 16px; font-size:0.86rem; font-weight:600; margin-bottom:16px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:600px){
+  .card{padding:20px;}
+  .masthead{padding:26px 20px 22px;}
+  .result-grid{grid-template-columns:1fr;}
+  .quiz-nav-buttons .btn{flex:1;}
+  .navigator{grid-template-columns:repeat(auto-fill, minmax(32px,1fr));}
+  .dash-stats{grid-template-columns:repeat(2,1fr);}
+  .dash-actions{margin-left:0; width:100%;}
+  .dash-actions .btn{flex:1;}
+}
+
+.visually-hidden{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING SCREEN ============ -->
+<section id="screen-landing" class="screen active">
+  <div class="wrap">
+    <div class="top-actions" style="justify-content:flex-end;">
+      <button class="teacher-link" id="btn-teacher-access" type="button">Teacher Access</button>
+    </div>
+    <div class="masthead">
+      <div class="motif" aria-hidden="true">
+        <span class="m1">P(x)</span>
+        <span class="m2">x³</span>
+        <span class="m3">f(x)</span>
+        <span class="m4">±</span>
+        <span class="m5">i</span>
+      </div>
+      <div class="eyebrow">MTCF 0114 · Mathematics 1</div>
+      <h1>Topic 3: Polynomial &amp; Rational Functions</h1>
+      <div class="sub">Centre for Foundation Studies, International Islamic University Malaysia</div>
+      <div class="tag">POP QUIZ · 25 Questions</div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0;">Ready to test your understanding of Topic 3?</h2>
+      <p style="color:#6b6060; margin-top:-8px;">25 questions · Polynomial &amp; Rational Functions</p>
+
+      <div id="landing-validation" class="validation-msg" role="alert"></div>
+
+      <form id="landing-form" novalidate>
+        <div class="field">
+          <label for="input-name">Student Name</label>
+          <input type="text" id="input-name" placeholder="Enter your full name" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="input-section">Section</label>
+          <input type="text" id="input-section" placeholder="e.g. 818" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">START QUIZ</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Quiz Instructions</h3>
+      <ul class="instructions-list">
+        <li>25 multiple-choice questions covering Topic 3</li>
+        <li>Choose ONE answer for each question</li>
+        <li>Answer all questions before submitting</li>
+        <li>You may navigate and review your answers before submission</li>
+        <li>Click <strong>Submit Quiz</strong> when finished</li>
+        <li>Your result will appear immediately after submission</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ SCREEN ============ -->
+<section id="screen-quiz" class="screen">
+  <div class="wrap">
+    <div class="top-actions">
+      <div class="q-meta" id="quiz-student-tag"></div>
+      <button class="small-link" id="btn-restart-from-quiz" type="button">Start New Attempt</button>
+    </div>
+
+    <div class="quiz-topbar">
+      <div class="q-count" id="q-count-label">Question 1 of 25</div>
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <div class="timer-pill" id="timer-pill" aria-live="polite">⏱ 45:00</div>
+        <div class="q-meta" id="q-progress-label">Progress: 0/25</div>
+      </div>
+    </div>
+    <div class="progress-outer"><div class="progress-inner" id="progress-inner" style="width:0%"></div></div>
+
+    <div class="card navigator-card">
+      <div id="navigator" class="navigator" role="group" aria-label="Question navigator"></div>
+      <div class="navigator-legend">
+        <span><span class="legend-dot" style="background:var(--orange-deep); border-color:var(--orange-deep);"></span>Current</span>
+        <span><span class="legend-dot" style="background:var(--yellow); border-color:#E8C25E;"></span>Answered</span>
+        <span><span class="legend-dot" style="background:#fff;"></span>Unanswered</span>
+      </div>
+    </div>
+
+    <div id="unanswered-banner" class="banner banner-warn" style="display:none;" role="status"></div>
+
+    <div class="card">
+      <div class="q-badge" id="q-topic-badge">Topic 3</div>
+      <div class="q-text" id="q-text-el"></div>
+      <div class="options" id="q-options-el" role="radiogroup"></div>
+
+      <div class="quiz-nav-buttons">
+        <button class="btn btn-secondary" id="btn-prev" type="button">Previous</button>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button class="btn btn-ghost" id="btn-submit" type="button">Submit Quiz</button>
+          <button class="btn btn-primary" id="btn-next" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS SCREEN ============ -->
+<section id="screen-results" class="screen">
+  <div class="wrap">
+    <div class="masthead">
+      <div class="motif" aria-hidden="true">
+        <span class="m1">P(x)</span><span class="m2">x³</span><span class="m3">f(x)</span><span class="m4">±</span><span class="m5">i</span>
+      </div>
+      <div class="eyebrow">MTCF 0114 · Topic 3</div>
+      <h1>Pop Quiz Completed!</h1>
+      <div class="sub">Well done for completing the quiz!</div>
+    </div>
+
+    <div class="card">
+      <div class="result-hero">
+        <div class="score-ring-wrap">
+          <div>
+            <div class="score-big" id="res-score">0 / 25</div>
+            <div class="score-pct" id="res-pct">0%</div>
+          </div>
+        </div>
+        <div class="perf-msg" id="res-perf-msg"></div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-stat">
+          <div class="label">Student Name</div>
+          <div class="value" id="res-name"></div>
+        </div>
+        <div class="result-stat">
+          <div class="label">Section</div>
+          <div class="value" id="res-section"></div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="btn-show-review" type="button">REVIEW ANSWERS</button>
+        <button class="btn btn-secondary" id="btn-start-new" type="button">START NEW ATTEMPT</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVIEW SCREEN ============ -->
+<section id="screen-review" class="screen">
+  <div class="wrap">
+    <div class="top-actions">
+      <h2 style="margin:0;">Review Answers</h2>
+      <button class="btn btn-secondary" id="btn-back-to-results" type="button">Back to Results</button>
+    </div>
+    <div id="review-list" style="margin-top:16px;"></div>
+    <div class="btn-row" style="justify-content:center; margin-top:6px;">
+      <button class="btn btn-secondary" id="btn-back-to-results-2" type="button">Back to Results</button>
+      <button class="btn btn-primary" id="btn-start-new-2" type="button">START NEW ATTEMPT</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEACHER DASHBOARD SCREEN ============ -->
+<section id="screen-teacher" class="screen">
+  <div class="wrap">
+    <div class="masthead">
+      <div class="motif" aria-hidden="true">
+        <span class="m1">P(x)</span><span class="m2">x³</span><span class="m3">f(x)</span><span class="m4">±</span><span class="m5">i</span>
+      </div>
+      <div class="eyebrow">MTCF 0114 · Topic 3</div>
+      <h1>Teacher Dashboard</h1>
+      <div class="sub">Leaderboard &amp; result management — teacher access only</div>
+    </div>
+
+    <div class="card">
+      <div class="top-actions" style="margin-bottom:6px;">
+        <h3 style="margin:0;">Leaderboard</h3>
+        <button class="small-link" id="btn-teacher-logout" type="button">Logout Teacher</button>
+      </div>
+
+      <div id="dash-supabase-note" class="dash-note" style="display:none;"></div>
+
+      <div class="dash-stats">
+        <div class="dash-stat"><div class="label">Total Attempts</div><div class="value" id="dash-total">0</div></div>
+        <div class="dash-stat"><div class="label">Highest Score</div><div class="value" id="dash-highest">–</div></div>
+        <div class="dash-stat"><div class="label">Average Score</div><div class="value" id="dash-average">–</div></div>
+        <div class="dash-stat"><div class="label">Sections</div><div class="value" id="dash-sections">0</div></div>
+      </div>
+
+      <div class="dash-toolbar">
+        <select id="dash-filter-section" aria-label="Filter by section">
+          <option value="">All Sections</option>
+        </select>
+        <input type="text" id="dash-search-name" placeholder="Search student name" aria-label="Search student name">
+        <div class="dash-actions">
+          <button class="btn btn-secondary" id="btn-refresh-leaderboard" type="button">Refresh Leaderboard</button>
+          <button class="btn btn-secondary" id="btn-export-csv" type="button">Export CSV</button>
+          <button class="btn btn-danger" id="btn-clear-records" type="button">CLEAR RECORDS</button>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="leader-table" id="leader-table">
+          <thead>
+            <tr>
+              <th>Rank</th><th>Student Name</th><th>Section</th><th>Score</th><th>Percentage</th><th>Duration</th><th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="leader-tbody"></tbody>
+        </table>
+      </div>
+      <div id="dash-empty" class="dash-empty" style="display:none;">No leaderboard records yet.</div>
+      <div id="dash-status-line" class="status-line" style="display:none;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODALS ============ -->
+<div class="modal-overlay" id="modal-teacher-login">
+  <div class="modal-box">
+    <h3>Teacher Access</h3>
+    <p>Enter the teacher access code to view the leaderboard.</p>
+    <div class="field" style="text-align:left;">
+      <label for="input-teacher-code" class="visually-hidden">Access Code</label>
+      <input type="password" id="input-teacher-code" placeholder="Enter teacher access code" autocomplete="off">
+    </div>
+    <div id="teacher-login-error" class="field-error" role="alert">Incorrect access code. Teacher access only.</div>
+    <div class="modal-btns" style="margin-top:16px;">
+      <button class="btn btn-secondary" id="modal-teacher-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="modal-teacher-confirm" type="button">ACCESS LEADERBOARD</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-clear-step1">
+  <div class="modal-box">
+    <h3>Clear All Leaderboard Records?</h3>
+    <p>This will permanently delete all student leaderboard records from the database. This action cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" id="modal-clear1-cancel" type="button">Cancel</button>
+      <button class="btn btn-danger" id="modal-clear1-continue" type="button">Continue</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-clear-step2">
+  <div class="modal-box">
+    <h3>Confirm Record Deletion</h3>
+    <p>Re-enter the teacher access code to permanently clear all leaderboard records.</p>
+    <div class="field" style="text-align:left;">
+      <label for="input-clear-code" class="visually-hidden">Access Code</label>
+      <input type="password" id="input-clear-code" placeholder="Enter teacher access code" autocomplete="off">
+    </div>
+    <div id="clear-code-error" class="field-error" role="alert">Incorrect access code. Teacher access only.</div>
+    <div class="modal-btns" style="margin-top:16px;">
+      <button class="btn btn-secondary" id="modal-clear2-cancel" type="button">Cancel</button>
+      <button class="btn btn-danger" id="modal-clear2-confirm" type="button" disabled>CLEAR ALL RECORDS</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-submit">
+  <div class="modal-box">
+    <h3>Submit your quiz?</h3>
+    <p>Are you sure you want to submit your quiz? You will not be able to change your answers afterwards.</p>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" id="modal-submit-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="modal-submit-confirm" type="button">Yes, Submit</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-restart">
+  <div class="modal-box">
+    <h3>Start a new attempt?</h3>
+    <p>This will permanently clear your current quiz data (name, section, answers and results). This action cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" id="modal-restart-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="modal-restart-confirm" type="button">Yes, Start New</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* =========================================================================
+   QUESTION BANK — 25 verified MCQs, Topic 3: Polynomial & Rational Functions
+   Every question independently solved and cross-checked with symbolic
+   algebra before inclusion. correct = index (0-3) into options[] BEFORE
+   shuffling. Options are shuffled per-student at quiz start and the mapping
+   is preserved via optionOrder so scoring stays accurate.
+   ========================================================================= */
+const QUESTIONS = [
+{
+  lo:"3.1", diff:"Easy",
+  q:"Consider the polynomial \\(P(x) = 5x^4 - 3x^3 + 2x - 7\\). What are its degree and leading coefficient?",
+  options:[
+    "Degree 4, leading coefficient 5",
+    "Degree 4, leading coefficient \\(-3\\)",
+    "Degree 3, leading coefficient 5",
+    "Degree 4, leading coefficient \\(-7\\)"
+  ],
+  correct:0,
+  explain:"The degree of a polynomial is the highest power of \\(x\\) that appears. Here that is \\(x^4\\), so the degree is 4. The leading coefficient is the coefficient attached to that highest-power term, which is 5. (Note the missing \\(x^2\\) term simply has coefficient 0 — it does not change the degree.)"
+},
+{
+  lo:"3.1", diff:"Easy",
+  q:"Which of the following expressions is a polynomial function?",
+  options:[
+    "\\(f(x) = 4x^3 - 2\\sqrt{x} + 1\\)",
+    "\\(f(x) = 3x^2 - 5x + 7\\)",
+    "\\(f(x) = \\dfrac{2}{x} + 3x - 1\\)",
+    "\\(f(x) = x^{3/2} - x + 4\\)"
+  ],
+  correct:1,
+  explain:"A polynomial function contains only terms with whole-number (non-negative integer) exponents on the variable. Option B has exponents 2, 1 and 0 — all whole numbers, so it is a polynomial. Option A contains \\(\\sqrt{x}=x^{1/2}\\), Option C contains \\(2/x = 2x^{-1}\\) (a negative exponent), and Option D contains \\(x^{3/2}\\) (a fractional exponent) — none of these are permitted in a polynomial."
+},
+{
+  lo:"3.2", diff:"Moderate",
+  q:"Divide \\(P(x) = 2x^3 - 3x^2 + 4x - 5\\) by \\(D(x) = x - 2\\), and write the result in the form \\(P(x) = Q(x)D(x) + R(x)\\).",
+  options:[
+    "\\(Q(x) = 2x^2 + x + 6,\\ R = 7\\)",
+    "\\(Q(x) = 2x^2 - x + 6,\\ R = 7\\)",
+    "\\(Q(x) = 2x^2 + x + 6,\\ R = -7\\)",
+    "\\(Q(x) = 2x^2 + x + 6,\\ R = 12\\)"
+  ],
+  correct:0,
+  explain:"Using synthetic division with root \\(2\\) on coefficients \\(2,-3,4,-5\\): bring down 2; \\(2\\times2=4,\\ -3+4=1\\); \\(1\\times2=2,\\ 4+2=6\\); \\(6\\times2=12,\\ -5+12=7\\). This gives quotient \\(Q(x)=2x^2+x+6\\) and remainder \\(R=7\\), so \\(2x^3-3x^2+4x-5=(2x^2+x+6)(x-2)+7\\)."
+},
+{
+  lo:"3.2/3.3", diff:"Moderate",
+  q:"When \\(P(x) = x^3 + kx^2 - 4x + 3\\) is divided by \\((x+1)\\), the remainder is 10. Find the value of \\(k\\).",
+  options:[
+    "\\(k = 4\\)",
+    "\\(k = -4\\)",
+    "\\(k = 6\\)",
+    "\\(k = 16\\)"
+  ],
+  correct:0,
+  explain:"By the Remainder Theorem, the remainder equals \\(P(-1)\\). \\(P(-1) = (-1)^3 + k(-1)^2 - 4(-1) + 3 = -1 + k + 4 + 3 = k + 6\\). Setting this equal to 10: \\(k + 6 = 10 \\Rightarrow k = 4\\)."
+},
+{
+  lo:"3.2", diff:"Moderate",
+  q:"Divide \\(P(x) = 3x^4 - 5x^3 + 2x - 8\\) by \\(D(x) = x^2 - 2\\) and express the result in the form \\(\\dfrac{P(x)}{D(x)} = Q(x) + \\dfrac{R(x)}{D(x)}\\).",
+  options:[
+    "\\(3x^2 - 5x + 6 + \\dfrac{-8x+4}{x^2-2}\\)",
+    "\\(3x^2 - 5x + 6 + \\dfrac{8x-4}{x^2-2}\\)",
+    "\\(3x^2 - 5x + 4 + \\dfrac{-8x+4}{x^2-2}\\)",
+    "\\(3x^2 + 5x + 6 + \\dfrac{-8x+4}{x^2-2}\\)"
+  ],
+  correct:0,
+  explain:"Long division: \\(3x^4\\div x^2 = 3x^2\\); subtracting \\(3x^2(x^2-2)\\) leaves \\(-5x^3+6x^2+2x-8\\). Next \\(-5x^3\\div x^2=-5x\\); subtracting \\(-5x(x^2-2)\\) leaves \\(6x^2-8x-8\\). Next \\(6x^2\\div x^2=6\\); subtracting \\(6(x^2-2)\\) leaves \\(-8x+4\\), which has lower degree than \\(D(x)\\), so it is the remainder. Hence \\(Q(x)=3x^2-5x+6\\) and \\(R(x)=-8x+4\\)."
+},
+{
+  lo:"3.3", diff:"Easy",
+  q:"Using the Remainder Theorem, find the remainder when \\(P(x) = 2x^3 + x^2 - 5x + 3\\) is divided by \\((x-1)\\).",
+  options:[
+    "1",
+    "\\(-1\\)",
+    "3",
+    "11"
+  ],
+  correct:0,
+  explain:"By the Remainder Theorem, the remainder equals \\(P(1) = 2(1)^3+(1)^2-5(1)+3 = 2+1-5+3 = 1\\)."
+},
+{
+  lo:"3.3", diff:"Moderate",
+  q:"If \\((x-3)\\) is a factor of \\(P(x) = x^3 - 4x^2 + kx - 6\\), find the value of \\(k\\).",
+  options:[
+    "\\(k = 5\\)",
+    "\\(k = -5\\)",
+    "\\(k = 3\\)",
+    "\\(k = 15\\)"
+  ],
+  correct:0,
+  explain:"By the Factor Theorem, \\((x-3)\\) is a factor if and only if \\(P(3)=0\\). \\(P(3) = 27 - 36 + 3k - 6 = 3k - 15\\). Setting \\(3k-15=0\\) gives \\(k = 5\\)."
+},
+{
+  lo:"3.3", diff:"Challenging",
+  q:"The polynomial \\(P(x) = 2x^3 + ax^2 - x + 5\\) leaves the same remainder when divided by \\((x-2)\\) and by \\((x+1)\\). Find the value of \\(a\\).",
+  options:[
+    "\\(a = -5\\)",
+    "\\(a = 5\\)",
+    "\\(a = -19\\)",
+    "\\(a = 15\\)"
+  ],
+  correct:0,
+  explain:"By the Remainder Theorem, dividing by \\((x-2)\\) gives remainder \\(P(2)=16+4a-2+5=4a+19\\); dividing by \\((x+1)\\) gives remainder \\(P(-1)=-2+a+1+5=a+4\\). Setting these equal: \\(4a+19 = a+4 \\Rightarrow 3a = -15 \\Rightarrow a = -5\\)."
+},
+{
+  lo:"3.3", diff:"Moderate",
+  q:"Determine whether \\((x-2)\\) is a factor of \\(P(x) = x^4 - 5x^3 + 5x^2 + 5x - 6\\).",
+  options:[
+    "Yes, since \\(P(2) = 0\\)",
+    "No, since \\(P(2) = 4\\)",
+    "Yes, since \\(P(-2) = 0\\)",
+    "No, since \\(P(2) = -6\\)"
+  ],
+  correct:0,
+  explain:"By the Factor Theorem, \\((x-2)\\) is a factor exactly when \\(P(2)=0\\). \\(P(2) = 16 - 40 + 20 + 10 - 6 = 0\\). Since \\(P(2)=0\\), \\((x-2)\\) is indeed a factor of \\(P(x)\\)."
+},
+{
+  lo:"3.4", diff:"Moderate",
+  q:"According to the Rational Zeros Theorem, which of the following is NOT a potential rational zero of \\(P(x) = 2x^3 - 3x^2 - 8x + 12\\)?",
+  options:[
+    "\\(\\dfrac{3}{2}\\)",
+    "4",
+    "\\(\\dfrac{2}{3}\\)",
+    "\\(-6\\)"
+  ],
+  correct:2,
+  explain:"By the Rational Zeros Theorem, potential rational zeros have the form \\(p/q\\), where \\(p\\) divides the constant term 12 and \\(q\\) divides the leading coefficient 2. The valid denominators are therefore only 1 or 2. For \\(2/3\\), the denominator 3 does NOT divide 2, so \\(2/3\\) cannot be a potential rational zero. In contrast, \\(3/2\\) (\\(p=3,q=2\\)), \\(4=4/1\\), and \\(-6=-6/1\\) are all valid."
+},
+{
+  lo:"3.4", diff:"Moderate",
+  q:"For \\(P(x) = 3x^4 - 2x^3 - x^2 + 4x - 5\\), how many positive real zeros are possible according to Descartes' Rule of Signs?",
+  options:[
+    "3 or 1",
+    "4 or 2",
+    "exactly 3",
+    "2 or 0"
+  ],
+  correct:0,
+  explain:"Looking at the signs of the coefficients of \\(P(x)\\): \\(+3,\\ -2,\\ -1,\\ +4,\\ -5\\), the sign changes occur \\((+\\to-),\\ (-\\to+),\\ (+\\to-)\\) — that is 3 sign changes. Descartes' Rule states the number of positive real zeros is either equal to this count or less than it by an even number, so the possible values are 3 or \\(3-2=1\\)."
+},
+{
+  lo:"3.4", diff:"Moderate",
+  q:"For the same polynomial \\(P(x) = 3x^4 - 2x^3 - x^2 + 4x - 5\\), how many negative real zeros are possible?",
+  options:[
+    "exactly 1",
+    "1 or 3",
+    "0 or 2",
+    "exactly 3"
+  ],
+  correct:0,
+  explain:"Substitute \\(-x\\): \\(P(-x) = 3x^4 + 2x^3 - x^2 - 4x - 5\\), with signs \\(+,+,-,-,-\\). There is only 1 sign change (\\(+\\to-\\)), so by Descartes' Rule the number of negative real zeros is 1 or \\(1-2\\). Since a negative count is impossible, there is exactly 1 negative real zero."
+},
+{
+  lo:"3.4", diff:"Moderate",
+  q:"Find all real zeros of \\(P(x) = x^3 - 3x^2 - 4x + 12\\).",
+  options:[
+    "\\(x = 2,\\ 3,\\ -2\\)",
+    "\\(x = -2,\\ 3,\\ 4\\)",
+    "\\(x = 2,\\ -3,\\ -2\\)",
+    "\\(x = 1,\\ 3,\\ -4\\)"
+  ],
+  correct:0,
+  explain:"Testing \\(x=2\\): \\(P(2) = 8 - 12 - 8 + 12 = 0\\), so \\((x-2)\\) is a factor. Dividing gives \\(P(x) = (x-2)(x^2 - x - 6) = (x-2)(x-3)(x+2)\\). The real zeros are therefore \\(x = 2,\\ 3,\\ -2\\)."
+},
+{
+  lo:"3.4", diff:"Challenging",
+  q:"Determine the multiplicity of the zero \\(x = 2\\) in \\(P(x) = x^4 - 4x^3 + 4x^2\\).",
+  options:[
+    "2",
+    "1",
+    "3",
+    "4"
+  ],
+  correct:0,
+  explain:"Factor out the common term: \\(P(x) = x^2(x^2-4x+4) = x^2(x-2)^2\\). Written in fully factored form, \\((x-2)\\) appears exactly twice, so the zero \\(x=2\\) has multiplicity 2 (and \\(x=0\\) also has multiplicity 2)."
+},
+{
+  lo:"3.5", diff:"Easy",
+  q:"A polynomial with real coefficients has \\(3 - 2i\\) as one of its zeros. Which of the following must also be a zero?",
+  options:[
+    "\\(3 + 2i\\)",
+    "\\(-3 - 2i\\)",
+    "\\(3 - 2i\\)",
+    "\\(-3 + 2i\\)"
+  ],
+  correct:0,
+  explain:"The Conjugate Pair Zeros Theorem states that for a polynomial with real coefficients, non-real complex zeros always occur in conjugate pairs. The conjugate of \\(3-2i\\) is \\(3+2i\\), so this must also be a zero."
+},
+{
+  lo:"3.5", diff:"Challenging",
+  q:"Given that \\(1+i\\) is a zero of \\(P(x) = x^3 - 4x^2 + 6x - 4\\), find all remaining zeros.",
+  options:[
+    "\\(1-i\\) and \\(2\\)",
+    "\\(1-i\\) and \\(-2\\)",
+    "\\(-1+i\\) and \\(2\\)",
+    "\\(1-i\\) and \\(4\\)"
+  ],
+  correct:0,
+  explain:"Since \\(P(x)\\) has real coefficients, the conjugate \\(1-i\\) must also be a zero (Conjugate Pair Zeros Theorem). These two zeros correspond to the quadratic factor \\((x-(1+i))(x-(1-i)) = x^2-2x+2\\). Dividing \\(P(x)\\) by \\(x^2-2x+2\\) gives quotient \\(x-2\\), so the remaining real zero is \\(x=2\\). The remaining zeros are \\(1-i\\) and \\(2\\)."
+},
+{
+  lo:"3.5", diff:"Moderate",
+  q:"Form the polynomial of least degree, with real coefficients and leading coefficient 1, having zeros \\(2,\\ -1,\\) and \\(3i\\).",
+  options:[
+    "\\(x^4 - x^3 + 7x^2 - 9x - 18\\)",
+    "\\(x^4 - x^3 - 11x^2 + 9x + 18\\)",
+    "\\(x^3 - x^2 + 7x - 18\\)",
+    "\\(x^4 + x^3 + 7x^2 + 9x - 18\\)"
+  ],
+  correct:0,
+  explain:"Since the polynomial must have real coefficients, the conjugate \\(-3i\\) must also be a zero, giving a degree-4 polynomial. \\(P(x) = (x-2)(x+1)(x-3i)(x+3i) = (x^2-x-2)(x^2+9)\\). Expanding: \\(x^4+9x^2-x^3-9x-2x^2-18 = x^4-x^3+7x^2-9x-18\\)."
+},
+{
+  lo:"3.5", diff:"Challenging",
+  q:"Given that \\(3i\\) is a zero of \\(P(x) = x^4 - 4x^3 + 14x^2 - 36x + 45\\), find all zeros of \\(P(x)\\).",
+  options:[
+    "\\(3i,\\ -3i,\\ 2+i,\\ 2-i\\)",
+    "\\(3i,\\ -3i,\\ 2+i,\\ -2-i\\)",
+    "\\(3i,\\ -3i,\\ 4+i,\\ 4-i\\)",
+    "\\(i,\\ -i,\\ 2+3i,\\ 2-3i\\)"
+  ],
+  correct:0,
+  explain:"Since coefficients are real, \\(-3i\\) is also a zero, giving the factor \\(x^2+9\\). Dividing \\(P(x)\\) by \\(x^2+9\\) gives quotient \\(x^2-4x+5\\). Solving with the quadratic formula: \\(x = \\dfrac{4 \\pm \\sqrt{16-20}}{2} = \\dfrac{4\\pm2i}{2} = 2\\pm i\\). All zeros are \\(3i,\\ -3i,\\ 2+i,\\ 2-i\\)."
+},
+{
+  lo:"3.6", diff:"Easy",
+  q:"Which of the following is an IMPROPER rational function?",
+  options:[
+    "\\(\\dfrac{x^2+3}{x^3-1}\\)",
+    "\\(\\dfrac{2x^3-x+1}{x^2+4}\\)",
+    "\\(\\dfrac{5}{x^2+2x+1}\\)",
+    "\\(\\dfrac{x-1}{x^2+x+6}\\)"
+  ],
+  correct:1,
+  explain:"A rational function is improper when the degree of the numerator is greater than or equal to the degree of the denominator. Option B has numerator degree 3 and denominator degree 2, so it is improper. All the other options have numerator degree strictly less than denominator degree, so they are proper."
+},
+{
+  lo:"3.6", diff:"Moderate",
+  q:"Convert the improper rational expression \\(\\dfrac{x^3-2x^2+4}{x-3}\\) into the form (polynomial) \\(+\\) (proper fraction).",
+  options:[
+    "\\(x^2+x+3+\\dfrac{13}{x-3}\\)",
+    "\\(x^2+x+3+\\dfrac{13}{x+3}\\)",
+    "\\(x^2-x+3+\\dfrac{13}{x-3}\\)",
+    "\\(x^2+x+3+\\dfrac{4}{x-3}\\)"
+  ],
+  correct:0,
+  explain:"Using synthetic division with root 3 on coefficients \\(1,-2,0,4\\): bring down 1; \\(1\\times3=3,\\ -2+3=1\\); \\(1\\times3=3,\\ 0+3=3\\); \\(3\\times3=9,\\ 4+9=13\\). This gives quotient \\(x^2+x+3\\) and remainder 13, so the expression equals \\(x^2+x+3+\\dfrac{13}{x-3}\\)."
+},
+{
+  lo:"3.7", diff:"Moderate",
+  q:"Decompose \\(\\dfrac{5x+7}{(x+1)(x+3)}\\) into partial fractions.",
+  options:[
+    "\\(\\dfrac{1}{x+1}+\\dfrac{4}{x+3}\\)",
+    "\\(\\dfrac{4}{x+1}+\\dfrac{1}{x+3}\\)",
+    "\\(\\dfrac{1}{x+1}-\\dfrac{4}{x+3}\\)",
+    "\\(\\dfrac{2}{x+1}+\\dfrac{3}{x+3}\\)"
+  ],
+  correct:0,
+  explain:"Write \\(\\dfrac{5x+7}{(x+1)(x+3)} = \\dfrac{A}{x+1}+\\dfrac{B}{x+3}\\), so \\(5x+7 = A(x+3)+B(x+1)\\). At \\(x=-1\\): \\(2 = 2A \\Rightarrow A=1\\). At \\(x=-3\\): \\(-8=-2B \\Rightarrow B=4\\). Check: \\((x+3)+4(x+1) = 5x+7\\) ✓. So the decomposition is \\(\\dfrac{1}{x+1}+\\dfrac{4}{x+3}\\)."
+},
+{
+  lo:"3.7", diff:"Challenging",
+  q:"Decompose \\(\\dfrac{x^2+7x+1}{(x-1)^2(x+2)}\\) into partial fractions.",
+  options:[
+    "\\(\\dfrac{2}{x-1}+\\dfrac{3}{(x-1)^2}-\\dfrac{1}{x+2}\\)",
+    "\\(\\dfrac{2}{x-1}-\\dfrac{3}{(x-1)^2}+\\dfrac{1}{x+2}\\)",
+    "\\(\\dfrac{3}{x-1}+\\dfrac{2}{(x-1)^2}-\\dfrac{1}{x+2}\\)",
+    "\\(\\dfrac{2}{x-1}+\\dfrac{3}{(x-1)^2}+\\dfrac{1}{x+2}\\)"
+  ],
+  correct:0,
+  explain:"Write \\(\\dfrac{A}{x-1}+\\dfrac{B}{(x-1)^2}+\\dfrac{C}{x+2}\\), so \\(x^2+7x+1 = A(x-1)(x+2)+B(x+2)+C(x-1)^2\\). At \\(x=1\\): \\(9 = 3B \\Rightarrow B=3\\). At \\(x=-2\\): \\(-9 = 9C \\Rightarrow C=-1\\). Comparing \\(x^2\\) coefficients: \\(A+C=1 \\Rightarrow A=2\\). Recombining \\(2(x-1)(x+2)+3(x+2)-(x-1)^2\\) reconstructs \\(x^2+7x+1\\) exactly, confirming \\(\\dfrac{2}{x-1}+\\dfrac{3}{(x-1)^2}-\\dfrac{1}{x+2}\\)."
+},
+{
+  lo:"3.7", diff:"Moderate",
+  q:"Decompose \\(\\dfrac{3x^2-4x+11}{(x-1)(x^2+4)}\\) into partial fractions.",
+  options:[
+    "\\(\\dfrac{2}{x-1}+\\dfrac{x-3}{x^2+4}\\)",
+    "\\(\\dfrac{2}{x-1}+\\dfrac{x+3}{x^2+4}\\)",
+    "\\(\\dfrac{2}{x-1}+\\dfrac{-x-3}{x^2+4}\\)",
+    "\\(\\dfrac{3}{x-1}+\\dfrac{x-2}{x^2+4}\\)"
+  ],
+  correct:0,
+  explain:"Write \\(\\dfrac{A}{x-1}+\\dfrac{Bx+C}{x^2+4}\\), so \\(3x^2-4x+11 = A(x^2+4)+(Bx+C)(x-1)\\). At \\(x=1\\): \\(10 = 5A \\Rightarrow A=2\\). Comparing \\(x^2\\) coefficients: \\(A+B=3 \\Rightarrow B=1\\). Comparing constants: \\(4A-C=11 \\Rightarrow 8-C=11 \\Rightarrow C=-3\\). Recombining confirms the decomposition \\(\\dfrac{2}{x-1}+\\dfrac{x-3}{x^2+4}\\)."
+},
+{
+  lo:"3.7", diff:"Challenging",
+  q:"Decompose \\(\\dfrac{x^3+2x^2+x+1}{(x^2+1)^2}\\) into partial fractions.",
+  options:[
+    "\\(\\dfrac{x+2}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\)",
+    "\\(\\dfrac{x+2}{x^2+1}+\\dfrac{1}{(x^2+1)^2}\\)",
+    "\\(\\dfrac{x-2}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\)",
+    "\\(\\dfrac{2x+1}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\)"
+  ],
+  correct:0,
+  explain:"Write \\(\\dfrac{Ax+B}{x^2+1}+\\dfrac{Cx+D}{(x^2+1)^2}\\), so \\(x^3+2x^2+x+1 = (Ax+B)(x^2+1)+Cx+D = Ax^3+Bx^2+(A+C)x+(B+D)\\). Matching coefficients: \\(A=1\\), \\(B=2\\), \\(A+C=1\\Rightarrow C=0\\), \\(B+D=1\\Rightarrow D=-1\\). This gives \\(\\dfrac{x+2}{x^2+1}+\\dfrac{-1}{(x^2+1)^2} = \\dfrac{x+2}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\), which recombines exactly to the original numerator."
+},
+{
+  lo:"3.6/3.7", diff:"Challenging",
+  q:"Express \\(\\dfrac{2x^3-x^2-3x+6}{x^2-4}\\) as the sum of a polynomial and its partial fraction decomposition.",
+  options:[
+    "\\(2x-1+\\dfrac{3}{x-2}+\\dfrac{2}{x+2}\\)",
+    "\\(2x+1+\\dfrac{3}{x-2}+\\dfrac{2}{x+2}\\)",
+    "\\(2x-1+\\dfrac{2}{x-2}+\\dfrac{3}{x+2}\\)",
+    "\\(2x-1+\\dfrac{3}{x-2}-\\dfrac{2}{x+2}\\)"
+  ],
+  correct:0,
+  explain:"Since the numerator's degree (3) is at least the denominator's degree (2), this is improper, so we divide first: \\(2x^3-x^2-3x+6\\) divided by \\(x^2-4\\) gives quotient \\(2x-1\\) and remainder \\(5x+2\\), so the expression equals \\(2x-1+\\dfrac{5x+2}{x^2-4}\\). Then decompose \\(\\dfrac{5x+2}{(x-2)(x+2)}=\\dfrac{A}{x-2}+\\dfrac{B}{x+2}\\): at \\(x=2\\), \\(12=4A\\Rightarrow A=3\\); at \\(x=-2\\), \\(-8=-4B\\Rightarrow B=2\\). Final answer: \\(2x-1+\\dfrac{3}{x-2}+\\dfrac{2}{x+2}\\)."
+}
+];
+
+const TOTAL = QUESTIONS.length; // 25
+const STORAGE_KEY = "mtcf0114_topic3_popquiz_v1";
+const QUIZ_DURATION_SECONDS = 45 * 60; // 45-minute quiz timer
+
+/* ---------------- Teacher access & Supabase config ----------------
+   Keep this constant clearly labelled so it can be changed later.
+   NOTE: because this is a static front-end app, this code is a
+   classroom-level access gate, not cryptographic security — anyone
+   inspecting the page source could recover it. Database deletion is
+   additionally protected by Supabase Row Level Security (see the
+   accompanying SQL instructions), not by this code alone.
+------------------------------------------------------------------- */
+const TEACHER_ACCESS_CODE = "SUHAILA BAHROM 6551";
+
+// TODO: replace with your own Supabase project URL and public anon key.
+// Never put a service-role key here — the anon key is safe for browser use
+// as long as Row Level Security policies are configured correctly.
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const LEADERBOARD_TABLE = "quiz_results";
+
+const supabaseClient = (function(){
+  try{
+    if(window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY &&
+       SUPABASE_URL.indexOf("YOUR_SUPABASE_URL") === -1 &&
+       SUPABASE_ANON_KEY.indexOf("YOUR_SUPABASE_ANON_KEY") === -1){
+      return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  }catch(e){ console.error("Supabase init failed", e); }
+  return null;
+})();
+
+function normalizeCode(str){
+  return (str || "").trim().replace(/\s+/g, " ").toUpperCase();
+}
+function isTeacherCodeValid(input){
+  return normalizeCode(input) === normalizeCode(TEACHER_ACCESS_CODE);
+}
+
+const TEACHER_SESSION_KEY = "mtcf0114_teacher_unlocked";
+const TEACHER_VIEW_KEY = "mtcf0114_teacher_view_active";
+
+function isTeacherUnlocked(){
+  try{ return sessionStorage.getItem(TEACHER_SESSION_KEY) === "true"; }catch(e){ return false; }
+}
+function setTeacherUnlocked(val){
+  try{
+    if(val) sessionStorage.setItem(TEACHER_SESSION_KEY, "true");
+    else sessionStorage.removeItem(TEACHER_SESSION_KEY);
+  }catch(e){}
+}
+function setTeacherViewActive(val){
+  try{
+    if(val) sessionStorage.setItem(TEACHER_VIEW_KEY, "true");
+    else sessionStorage.removeItem(TEACHER_VIEW_KEY);
+  }catch(e){}
+}
+function isTeacherViewActive(){
+  try{ return sessionStorage.getItem(TEACHER_VIEW_KEY) === "true"; }catch(e){ return false; }
+}
+
+/* ---------------- State management ---------------- */
+function freshState(name, section){
+  const optionOrder = QUESTIONS.map(()=> shuffle([0,1,2,3]));
+  const now = Date.now();
+  return {
+    name: name, section: section,
+    current: 0,
+    answers: new Array(TOTAL).fill(null), // stores ORIGINAL option index chosen
+    optionOrder: optionOrder,             // optionOrder[qi][displayPos] = originalIndex
+    started: true,
+    submitted: false,
+    score: null,
+    submittedAt: null,
+    startTime: now,
+    endTime: now + QUIZ_DURATION_SECONDS * 1000,
+    durationSeconds: null,
+    autoSubmitted: false,
+    resultSynced: false
+  };
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(!parsed || !Array.isArray(parsed.answers) || parsed.answers.length !== TOTAL) return null;
+    return parsed;
+  }catch(e){ return null; }
+}
+
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){ /* ignore quota errors */ }
+}
+
+function clearState(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+}
+
+let state = loadState();
+let timerInterval = null;
+
+/* ---------------- DOM refs ---------------- */
+const screens = {
+  landing: document.getElementById("screen-landing"),
+  quiz: document.getElementById("screen-quiz"),
+  results: document.getElementById("screen-results"),
+  review: document.getElementById("screen-review"),
+  teacher: document.getElementById("screen-teacher")
+};
+
+function showScreen(name){
+  Object.values(screens).forEach(s=>s.classList.remove("active"));
+  screens[name].classList.add("active");
+  window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+}
+
+function typeset(el){
+  if(window.MathJax && window.MathJax.typesetPromise){
+    window.MathJax.typesetPromise([el]).catch(()=>{});
+  }
+}
+
+/* ---------------- Landing ---------------- */
+const landingForm = document.getElementById("landing-form");
+const inputName = document.getElementById("input-name");
+const inputSection = document.getElementById("input-section");
+const landingValidation = document.getElementById("landing-validation");
+
+landingForm.addEventListener("submit", function(e){
+  e.preventDefault();
+  const name = inputName.value.trim();
+  const section = inputSection.value.trim();
+  if(!name || !section){
+    landingValidation.textContent = "Please enter both your full name and section before starting the quiz.";
+    landingValidation.style.display = "block";
+    return;
+  }
+  landingValidation.style.display = "none";
+  state = freshState(name, section);
+  saveState();
+  renderQuiz();
+  showScreen("quiz");
+  startQuizTimer();
+});
+
+/* ---------------- Quiz rendering ---------------- */
+const qCountLabel = document.getElementById("q-count-label");
+const qProgressLabel = document.getElementById("q-progress-label");
+const progressInner = document.getElementById("progress-inner");
+const navigatorEl = document.getElementById("navigator");
+const qTopicBadge = document.getElementById("q-topic-badge");
+const qTextEl = document.getElementById("q-text-el");
+const qOptionsEl = document.getElementById("q-options-el");
+const btnPrev = document.getElementById("btn-prev");
+const btnNext = document.getElementById("btn-next");
+const btnSubmit = document.getElementById("btn-submit");
+const unansweredBanner = document.getElementById("unanswered-banner");
+const quizStudentTag = document.getElementById("quiz-student-tag");
+
+const timerPillEl = document.getElementById("timer-pill");
+
+function formatClock(totalSeconds){
+  const s = Math.max(0, Math.round(totalSeconds));
+  const m = Math.floor(s/60);
+  const sec = s%60;
+  return String(m).padStart(2,"0") + ":" + String(sec).padStart(2,"0");
+}
+
+function updateTimerDisplay(){
+  if(!state || !state.endTime || !timerPillEl) return;
+  const remainingMs = state.endTime - Date.now();
+  const remainingSec = Math.max(0, Math.round(remainingMs/1000));
+  timerPillEl.textContent = "⏱ " + formatClock(remainingSec);
+  timerPillEl.classList.remove("warn","danger");
+  if(remainingSec <= 60){ timerPillEl.classList.add("danger"); }
+  else if(remainingSec <= 300){ timerPillEl.classList.add("warn"); }
+
+  if(remainingMs <= 0 && state.started && !state.submitted){
+    stopQuizTimer();
+    state.autoSubmitted = true;
+    finalizeSubmission();
+  }
+}
+
+function startQuizTimer(){
+  stopQuizTimer();
+  updateTimerDisplay();
+  timerInterval = setInterval(updateTimerDisplay, 1000);
+}
+
+function stopQuizTimer(){
+  if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+}
+
+function answeredCount(){
+  return state.answers.filter(a=>a!==null).length;
+}
+
+function renderNavigator(){
+  navigatorEl.innerHTML = "";
+  for(let i=0;i<TOTAL;i++){
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "nav-btn";
+    btn.textContent = (i+1);
+    btn.setAttribute("aria-label", "Go to question " + (i+1) + (state.answers[i]!==null ? " (answered)" : " (unanswered)"));
+    if(state.answers[i]!==null) btn.classList.add("answered");
+    if(i===state.current) btn.classList.add("current");
+    btn.addEventListener("click", function(){
+      state.current = i;
+      saveState();
+      renderQuiz();
+    });
+    navigatorEl.appendChild(btn);
+  }
+}
+
+function renderQuiz(){
+  quizStudentTag.textContent = state.name + " · Section " + state.section;
+  const idx = state.current;
+  const q = QUESTIONS[idx];
+
+  qCountLabel.textContent = "Question " + (idx+1) + " of " + TOTAL;
+  const answered = answeredCount();
+  qProgressLabel.textContent = "Progress: " + answered + "/" + TOTAL;
+  progressInner.style.width = Math.round((answered/TOTAL)*100) + "%";
+
+  qTopicBadge.textContent = "Topic " + q.lo;
+  qTextEl.innerHTML = q.q;
+
+  const order = state.optionOrder[idx]; // array of original indices in display order
+  const chosenOriginal = state.answers[idx];
+
+  qOptionsEl.innerHTML = "";
+  const letters = ["A","B","C","D"];
+  order.forEach(function(origIndex, displayPos){
+    const optWrap = document.createElement("div");
+    optWrap.className = "option" + (chosenOriginal===origIndex ? " selected" : "");
+
+    const inputId = "opt-" + idx + "-" + displayPos;
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "question-" + idx;
+    radio.id = inputId;
+    radio.checked = chosenOriginal === origIndex;
+    radio.addEventListener("change", function(){
+      state.answers[idx] = origIndex;
+      saveState();
+      renderQuiz();
+    });
+
+    const label = document.createElement("label");
+    label.setAttribute("for", inputId);
+    label.innerHTML = '<span class="opt-letter">' + letters[displayPos] + '.</span> ' + q.options[origIndex];
+
+    optWrap.appendChild(radio);
+    optWrap.appendChild(label);
+    optWrap.addEventListener("click", function(ev){
+      if(ev.target !== radio){ radio.checked = true; radio.dispatchEvent(new Event("change")); }
+    });
+    qOptionsEl.appendChild(optWrap);
+  });
+
+  btnPrev.disabled = idx===0;
+  btnNext.textContent = idx===TOTAL-1 ? "Next" : "Next";
+  btnNext.disabled = idx===TOTAL-1;
+
+  unansweredBanner.style.display = "none";
+
+  renderNavigator();
+  typeset(qTextEl);
+  typeset(qOptionsEl);
+}
+
+btnPrev.addEventListener("click", function(){
+  if(state.current>0){ state.current--; saveState(); renderQuiz(); }
+});
+btnNext.addEventListener("click", function(){
+  if(state.current<TOTAL-1){ state.current++; saveState(); renderQuiz(); }
+});
+
+btnSubmit.addEventListener("click", function(){
+  const missing = [];
+  state.answers.forEach(function(a,i){ if(a===null) missing.push(i); });
+  if(missing.length>0){
+    unansweredBanner.style.display = "flex";
+    unansweredBanner.innerHTML =
+      "<span>You still have " + missing.length + " unanswered question" + (missing.length===1?"":"s") + ". Please review them before submitting.</span>" +
+      '<span class="btn-row" style="margin:0;">' +
+        '<button type="button" class="btn btn-secondary" id="btn-review-unanswered">Review Questions</button>' +
+        '<button type="button" class="btn btn-ghost" id="btn-submit-anyway">Submit Anyway</button>' +
+      "</span>";
+    document.getElementById("btn-review-unanswered").addEventListener("click", function(){
+      state.current = missing[0];
+      saveState();
+      renderQuiz();
+    });
+    document.getElementById("btn-submit-anyway").addEventListener("click", function(){
+      openModal("modal-submit");
+    });
+    return;
+  }
+  openModal("modal-submit");
+});
+
+/* ---------------- Modals ---------------- */
+function openModal(id){ document.getElementById(id).classList.add("active"); }
+function closeModal(id){ document.getElementById(id).classList.remove("active"); }
+
+document.getElementById("modal-submit-cancel").addEventListener("click", function(){ closeModal("modal-submit"); });
+document.getElementById("modal-submit-confirm").addEventListener("click", function(){
+  closeModal("modal-submit");
+  finalizeSubmission();
+});
+
+document.getElementById("btn-restart-from-quiz").addEventListener("click", function(){ openModal("modal-restart"); });
+document.getElementById("modal-restart-cancel").addEventListener("click", function(){ closeModal("modal-restart"); });
+document.getElementById("modal-restart-confirm").addEventListener("click", function(){
+  closeModal("modal-restart");
+  startNewAttempt();
+});
+document.getElementById("btn-start-new").addEventListener("click", function(){ openModal("modal-restart"); });
+document.getElementById("btn-start-new-2").addEventListener("click", function(){ openModal("modal-restart"); });
+
+function startNewAttempt(){
+  stopQuizTimer();
+  clearState();
+  state = null;
+  inputName.value = "";
+  inputSection.value = "";
+  landingValidation.style.display = "none";
+  showScreen("landing");
+}
+
+/* ---------------- Scoring & results ---------------- */
+function finalizeSubmission(){
+  if(state.submitted) return; // guard against double-submission (e.g. auto-submit race)
+  stopQuizTimer();
+  let score = 0;
+  state.answers.forEach(function(ans,i){
+    if(ans === QUESTIONS[i].correct) score++;
+  });
+  state.score = score;
+  state.submitted = true;
+  state.submittedAt = Date.now();
+  const rawDuration = Math.round((state.submittedAt - state.startTime)/1000);
+  state.durationSeconds = Math.min(Math.max(rawDuration, 0), QUIZ_DURATION_SECONDS);
+  saveState();
+  renderResults();
+  showScreen("results");
+  syncResultToSupabase();
+}
+
+async function syncResultToSupabase(){
+  if(!supabaseClient || state.resultSynced) return;
+  try{
+    const { error } = await supabaseClient.from(LEADERBOARD_TABLE).insert([{
+      student_name: state.name,
+      section: state.section,
+      score: state.score,
+      total_questions: TOTAL,
+      percentage: Math.round((state.score/TOTAL)*100),
+      duration_seconds: state.durationSeconds,
+      submitted_at: new Date(state.submittedAt).toISOString()
+    }]);
+    if(!error){
+      state.resultSynced = true;
+      saveState();
+    }else{
+      console.error("Supabase insert error", error);
+    }
+  }catch(e){
+    console.error("Supabase insert failed", e);
+  }
+}
+
+function renderResults(){
+  const score = state.score;
+  const pct = Math.round((score/TOTAL)*100);
+  document.getElementById("res-score").textContent = score + " / " + TOTAL;
+  document.getElementById("res-pct").textContent = pct + "%";
+  document.getElementById("res-name").textContent = state.name;
+  document.getElementById("res-section").textContent = state.section;
+
+  const msgEl = document.getElementById("res-perf-msg");
+  msgEl.className = "perf-msg";
+  let msg, cls;
+  if(pct>=80){ msg="Excellent work! You have a strong grasp of Topic 3."; cls="perf-excellent"; }
+  else if(pct>=60){ msg="Good effort! You're on the right track with Topic 3."; cls="perf-good"; }
+  else if(pct>=40){ msg="Keep practising! Revisit a few concepts in Topic 3 to strengthen your understanding."; cls="perf-keep"; }
+  else{ msg="More practice will help. Review Topic 3 and try again."; cls="perf-more"; }
+  msgEl.textContent = msg;
+  msgEl.classList.add(cls);
+
+  let autoNote = document.getElementById("res-auto-note");
+  if(state.autoSubmitted){
+    if(!autoNote){
+      autoNote = document.createElement("div");
+      autoNote.id = "res-auto-note";
+      autoNote.style.cssText = "text-align:center; font-size:0.86rem; color:#8a3f10; font-weight:600; margin-top:10px;";
+      msgEl.insertAdjacentElement("afterend", autoNote);
+    }
+    autoNote.textContent = "Time expired — your quiz was submitted automatically.";
+  } else if(autoNote){
+    autoNote.remove();
+  }
+}
+
+document.getElementById("btn-show-review").addEventListener("click", function(){
+  renderReview();
+  showScreen("review");
+});
+document.getElementById("btn-back-to-results").addEventListener("click", function(){ showScreen("results"); });
+document.getElementById("btn-back-to-results-2").addEventListener("click", function(){ showScreen("results"); });
+
+/* ---------------- Review ---------------- */
+const reviewList = document.getElementById("review-list");
+
+function renderReview(){
+  reviewList.innerHTML = "";
+  const letters = ["A","B","C","D"];
+  QUESTIONS.forEach(function(q, idx){
+    const studentOriginal = state.answers[idx];
+    const isCorrect = studentOriginal === q.correct;
+    const order = state.optionOrder[idx];
+
+    const item = document.createElement("div");
+    item.className = "review-item";
+
+    const head = document.createElement("div");
+    head.className = "review-head";
+    head.innerHTML =
+      '<div style="font-weight:800;">Question ' + (idx+1) + ' <span style="font-weight:600; color:#8a7f7f; font-size:0.82rem;">(Topic ' + q.lo + ')</span></div>' +
+      '<span class="status-chip ' + (isCorrect?"status-correct":"status-incorrect") + '">' +
+        (isCorrect ? "\u2713 Correct" : "\u2717 Incorrect") +
+      '</span>';
+    item.appendChild(head);
+
+    const qp = document.createElement("div");
+    qp.className = "q-text";
+    qp.style.fontSize = "1.02rem";
+    qp.style.marginBottom = "14px";
+    qp.innerHTML = q.q;
+    item.appendChild(qp);
+
+    order.forEach(function(origIndex, displayPos){
+      const row = document.createElement("div");
+      let rowClass = "review-option";
+      let tagHtml = "";
+      if(origIndex === q.correct && origIndex === studentOriginal){
+        rowClass += " your-correct";
+        tagHtml = '<span class="review-tag tag-correct">Your answer &middot; Correct</span>';
+      } else if(origIndex === q.correct){
+        rowClass += " the-correct";
+        tagHtml = '<span class="review-tag tag-correct">Correct answer</span>';
+      } else if(origIndex === studentOriginal){
+        rowClass += " your-wrong";
+        tagHtml = '<span class="review-tag tag-your">Your answer</span>';
+      }
+      row.className = rowClass;
+      row.innerHTML = '<span class="opt-letter">' + letters[displayPos] + '.</span><span style="flex:1;">' + q.options[origIndex] + '</span>' + tagHtml;
+      item.appendChild(row);
+    });
+
+    const explain = document.createElement("div");
+    explain.className = "explain-box";
+    explain.innerHTML = "<strong>Explanation:</strong> " + q.explain;
+    item.appendChild(explain);
+
+    reviewList.appendChild(item);
+  });
+  typeset(reviewList);
+}
+
+/* ---------------- Teacher access ---------------- */
+const btnTeacherAccess = document.getElementById("btn-teacher-access");
+const modalTeacherLogin = document.getElementById("modal-teacher-login");
+const inputTeacherCode = document.getElementById("input-teacher-code");
+const teacherLoginError = document.getElementById("teacher-login-error");
+const btnTeacherLogout = document.getElementById("btn-teacher-logout");
+
+btnTeacherAccess.addEventListener("click", function(){
+  if(isTeacherUnlocked()){
+    enterTeacherDashboard();
+    return;
+  }
+  inputTeacherCode.value = "";
+  teacherLoginError.style.display = "none";
+  openModal("modal-teacher-login");
+  setTimeout(function(){ inputTeacherCode.focus(); }, 50);
+});
+
+document.getElementById("modal-teacher-cancel").addEventListener("click", function(){
+  closeModal("modal-teacher-login");
+});
+
+function attemptTeacherLogin(){
+  if(isTeacherCodeValid(inputTeacherCode.value)){
+    setTeacherUnlocked(true);
+    teacherLoginError.style.display = "none";
+    closeModal("modal-teacher-login");
+    enterTeacherDashboard();
+  }else{
+    teacherLoginError.style.display = "block";
+  }
+}
+document.getElementById("modal-teacher-confirm").addEventListener("click", attemptTeacherLogin);
+inputTeacherCode.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){ e.preventDefault(); attemptTeacherLogin(); }
+});
+
+function enterTeacherDashboard(){
+  setTeacherViewActive(true);
+  stopQuizTimer();
+  showScreen("teacher");
+  refreshLeaderboard();
+}
+
+btnTeacherLogout.addEventListener("click", function(){
+  setTeacherUnlocked(false);
+  setTeacherViewActive(false);
+  showScreen("landing");
+});
+
+/* ---------------- Teacher dashboard: leaderboard ---------------- */
+const dashSupabaseNote = document.getElementById("dash-supabase-note");
+const dashTotal = document.getElementById("dash-total");
+const dashHighest = document.getElementById("dash-highest");
+const dashAverage = document.getElementById("dash-average");
+const dashSections = document.getElementById("dash-sections");
+const dashFilterSection = document.getElementById("dash-filter-section");
+const dashSearchName = document.getElementById("dash-search-name");
+const leaderTbody = document.getElementById("leader-tbody");
+const dashEmpty = document.getElementById("dash-empty");
+const dashStatusLine = document.getElementById("dash-status-line");
+const leaderTable = document.getElementById("leader-table");
+
+let leaderboardData = []; // raw rows fetched from Supabase
+
+function formatDuration(sec){
+  if(sec===null || sec===undefined) return "–";
+  return formatClock(sec);
+}
+function formatSubmittedAt(iso){
+  if(!iso) return "–";
+  try{
+    return new Date(iso).toLocaleString();
+  }catch(e){ return iso; }
+}
+
+async function refreshLeaderboard(){
+  dashSupabaseNote.style.display = "none";
+  if(!supabaseClient){
+    leaderboardData = [];
+    dashSupabaseNote.textContent = "Supabase is not configured yet. Add your project URL and anon key in the SUPABASE_URL / SUPABASE_ANON_KEY constants to enable the live leaderboard.";
+    dashSupabaseNote.style.display = "block";
+    renderLeaderboardTable();
+    return;
+  }
+  try{
+    const { data, error } = await supabaseClient
+      .from(LEADERBOARD_TABLE)
+      .select("*")
+      .order("score", { ascending:false })
+      .order("duration_seconds", { ascending:true })
+      .order("submitted_at", { ascending:true });
+    if(error){
+      dashSupabaseNote.textContent = "Unable to load leaderboard records. Please try refreshing.";
+      dashSupabaseNote.style.display = "block";
+      leaderboardData = [];
+    }else{
+      leaderboardData = data || [];
+    }
+  }catch(e){
+    dashSupabaseNote.textContent = "Unable to load leaderboard records. Please try refreshing.";
+    dashSupabaseNote.style.display = "block";
+    leaderboardData = [];
+  }
+  populateSectionFilter();
+  renderLeaderboardTable();
+}
+
+function populateSectionFilter(){
+  const current = dashFilterSection.value;
+  const sections = Array.from(new Set(leaderboardData.map(r=>r.section).filter(Boolean))).sort();
+  dashFilterSection.innerHTML = '<option value="">All Sections</option>' +
+    sections.map(s=>'<option value="'+escapeHtml(s)+'">'+escapeHtml(s)+'</option>').join("");
+  if(sections.indexOf(current) !== -1) dashFilterSection.value = current;
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function getFilteredSortedRows(){
+  const sectionFilter = dashFilterSection.value;
+  const nameFilter = dashSearchName.value.trim().toLowerCase();
+  let rows = leaderboardData.slice();
+  if(sectionFilter) rows = rows.filter(r => r.section === sectionFilter);
+  if(nameFilter) rows = rows.filter(r => (r.student_name||"").toLowerCase().indexOf(nameFilter) !== -1);
+  rows.sort(function(a,b){
+    if(b.score !== a.score) return b.score - a.score;
+    const da = a.duration_seconds==null ? Infinity : a.duration_seconds;
+    const db = b.duration_seconds==null ? Infinity : b.duration_seconds;
+    if(da !== db) return da - db;
+    return new Date(a.submitted_at) - new Date(b.submitted_at);
+  });
+  return rows;
+}
+
+function renderLeaderboardTable(){
+  const rows = getFilteredSortedRows();
+
+  dashTotal.textContent = leaderboardData.length;
+  if(leaderboardData.length){
+    const highest = Math.max.apply(null, leaderboardData.map(r=>r.score));
+    const avg = leaderboardData.reduce((s,r)=>s+r.score,0) / leaderboardData.length;
+    dashHighest.textContent = highest + " / " + TOTAL;
+    dashAverage.textContent = avg.toFixed(1) + " / " + TOTAL;
+  }else{
+    dashHighest.textContent = "–";
+    dashAverage.textContent = "–";
+  }
+  dashSections.textContent = new Set(leaderboardData.map(r=>r.section).filter(Boolean)).size;
+
+  leaderTbody.innerHTML = "";
+  if(rows.length===0){
+    leaderTable.style.display = "none";
+    dashEmpty.style.display = "block";
+    return;
+  }
+  leaderTable.style.display = "table";
+  dashEmpty.style.display = "none";
+
+  rows.forEach(function(r, i){
+    const rank = i+1;
+    const tr = document.createElement("tr");
+    const pct = r.percentage != null ? r.percentage : Math.round((r.score/(r.total_questions||TOTAL))*100);
+    let rankClass = "rank-badge";
+    if(rank===1) rankClass += " rank-1";
+    else if(rank===2) rankClass += " rank-2";
+    else if(rank===3) rankClass += " rank-3";
+    tr.innerHTML =
+      '<td><span class="'+rankClass+'">'+rank+'</span></td>' +
+      '<td>'+escapeHtml(r.student_name||"–")+'</td>' +
+      '<td>'+escapeHtml(r.section||"–")+'</td>' +
+      '<td>'+r.score+' / '+(r.total_questions||TOTAL)+'</td>' +
+      '<td>'+pct+'%</td>' +
+      '<td>'+formatDuration(r.duration_seconds)+'</td>' +
+      '<td>'+formatSubmittedAt(r.submitted_at)+'</td>';
+    leaderTbody.appendChild(tr);
+  });
+}
+
+document.getElementById("btn-refresh-leaderboard").addEventListener("click", refreshLeaderboard);
+dashFilterSection.addEventListener("change", renderLeaderboardTable);
+dashSearchName.addEventListener("input", renderLeaderboardTable);
+
+document.getElementById("btn-export-csv").addEventListener("click", function(){
+  const rows = getFilteredSortedRows();
+  const header = ["Rank","Student Name","Section","Score","Total","Percentage","Duration (s)","Submitted At"];
+  const lines = [header.join(",")];
+  rows.forEach(function(r,i){
+    const pct = r.percentage != null ? r.percentage : Math.round((r.score/(r.total_questions||TOTAL))*100);
+    const line = [
+      i+1,
+      '"'+String(r.student_name||"").replace(/"/g,'""')+'"',
+      '"'+String(r.section||"").replace(/"/g,'""')+'"',
+      r.score,
+      r.total_questions||TOTAL,
+      pct,
+      r.duration_seconds!=null ? r.duration_seconds : "",
+      r.submitted_at||""
+    ].join(",");
+    lines.push(line);
+  });
+  const csv = lines.join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "mtcf0114_topic3_leaderboard.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+/* ---------------- Clear records (two-step) ---------------- */
+const inputClearCode = document.getElementById("input-clear-code");
+const clearCodeError = document.getElementById("clear-code-error");
+const modalClear2Confirm = document.getElementById("modal-clear2-confirm");
+
+document.getElementById("btn-clear-records").addEventListener("click", function(){
+  openModal("modal-clear-step1");
+});
+document.getElementById("modal-clear1-cancel").addEventListener("click", function(){
+  closeModal("modal-clear-step1");
+});
+document.getElementById("modal-clear1-continue").addEventListener("click", function(){
+  closeModal("modal-clear-step1");
+  inputClearCode.value = "";
+  clearCodeError.style.display = "none";
+  modalClear2Confirm.disabled = true;
+  openModal("modal-clear-step2");
+  setTimeout(function(){ inputClearCode.focus(); }, 50);
+});
+document.getElementById("modal-clear2-cancel").addEventListener("click", function(){
+  closeModal("modal-clear-step2");
+});
+inputClearCode.addEventListener("input", function(){
+  modalClear2Confirm.disabled = !isTeacherCodeValid(inputClearCode.value);
+  clearCodeError.style.display = "none";
+});
+
+modalClear2Confirm.addEventListener("click", async function(){
+  if(!isTeacherCodeValid(inputClearCode.value)){
+    clearCodeError.style.display = "block";
+    return;
+  }
+  modalClear2Confirm.disabled = true;
+  modalClear2Confirm.textContent = "Clearing…";
+  const result = await clearAllRecords();
+  modalClear2Confirm.textContent = "CLEAR ALL RECORDS";
+  closeModal("modal-clear-step2");
+  if(result.ok){
+    await refreshLeaderboard();
+    dashStatusLine.style.display = "block";
+    dashStatusLine.textContent = "All leaderboard records have been cleared successfully. (Cleared at: " + new Date().toLocaleString() + ")";
+  }else{
+    dashStatusLine.style.display = "block";
+    dashStatusLine.textContent = "Unable to clear records. Please try again.";
+  }
+});
+
+async function clearAllRecords(){
+  if(!supabaseClient) return { ok:false };
+  try{
+    const { error } = await supabaseClient.from(LEADERBOARD_TABLE).delete().neq("id", 0);
+    return { ok: !error };
+  }catch(e){
+    return { ok:false };
+  }
+}
+
+/* ---------------- Boot ---------------- */
+function boot(){
+  if(isTeacherUnlocked() && isTeacherViewActive()){
+    showScreen("teacher");
+    refreshLeaderboard();
+    return;
+  }
+  if(state && state.submitted){
+    renderResults();
+    showScreen("results");
+  } else if(state && state.started){
+    // Guard against a stale/missing endTime from an older saved session
+    if(!state.endTime){ state.endTime = Date.now() + QUIZ_DURATION_SECONDS*1000; saveState(); }
+    renderQuiz();
+    showScreen("quiz");
+    startQuizTimer();
+  } else {
+    showScreen("landing");
+  }
+}
+
+boot();
+
+})();
+</script>
+</body>
+</html>
