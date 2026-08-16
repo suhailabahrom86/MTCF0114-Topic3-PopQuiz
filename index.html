@@ -404,12 +404,12 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
       <div class="eyebrow">MTCF 0114 · Mathematics 1</div>
       <h1>Topic 3: Polynomial &amp; Rational Functions</h1>
       <div class="sub">Centre for Foundation Studies, International Islamic University Malaysia</div>
-      <div class="tag">POP QUIZ · 25 Questions</div>
+      <div class="tag">POP QUIZ · 15 Questions</div>
     </div>
 
     <div class="card">
       <h2 style="margin-top:0;">Ready to test your understanding of Topic 3?</h2>
-      <p style="color:#6b6060; margin-top:-8px;">25 questions · Polynomial &amp; Rational Functions</p>
+      <p style="color:#6b6060; margin-top:-8px;">15 questions · Polynomial &amp; Rational Functions</p>
 
       <div id="landing-validation" class="validation-msg" role="alert"></div>
 
@@ -429,7 +429,7 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
     <div class="card">
       <h3 style="margin-top:0;">Quiz Instructions</h3>
       <ul class="instructions-list">
-        <li>25 multiple-choice questions covering Topic 3</li>
+        <li>15 multiple-choice questions covering Topic 3</li>
         <li>Choose ONE answer for each question</li>
         <li>Answer all questions before submitting</li>
         <li>You may navigate and review your answers before submission</li>
@@ -449,10 +449,10 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
     </div>
 
     <div class="quiz-topbar">
-      <div class="q-count" id="q-count-label">Question 1 of 25</div>
+      <div class="q-count" id="q-count-label">Question 1 of 15</div>
       <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-        <div class="timer-pill" id="timer-pill" aria-live="polite">⏱ 45:00</div>
-        <div class="q-meta" id="q-progress-label">Progress: 0/25</div>
+        <div class="timer-pill" id="timer-pill" aria-live="polite">⏱ 40:00</div>
+        <div class="q-meta" id="q-progress-label">Progress: 0/15</div>
       </div>
     </div>
     <div class="progress-outer"><div class="progress-inner" id="progress-inner" style="width:0%"></div></div>
@@ -500,7 +500,7 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
       <div class="result-hero">
         <div class="score-ring-wrap">
           <div>
-            <div class="score-big" id="res-score">0 / 25</div>
+            <div class="score-big" id="res-score">0 / 15</div>
             <div class="score-pct" id="res-pct">0%</div>
           </div>
         </div>
@@ -667,11 +667,16 @@ h1,h2,h3,.display{font-family:'Fraunces', Georgia, serif;}
 "use strict";
 
 /* =========================================================================
-   QUESTION BANK — 25 verified MCQs, Topic 3: Polynomial & Rational Functions
+   QUESTION BANK — 15 verified MCQs, Topic 3: Polynomial & Rational Functions
    Every question independently solved and cross-checked with symbolic
    algebra before inclusion. correct = index (0-3) into options[] BEFORE
    shuffling. Options are shuffled per-student at quiz start and the mapping
    is preserved via optionOrder so scoring stays accurate.
+   Coverage: Polynomial Functions, Dividing Polynomials, Remainder Theorem,
+   Factor Theorem, Rational Zeros Theorem, Descartes' Rule of Signs,
+   Real Zeros, Multiplicity, Complex (Conjugate Pair) Zeros,
+   Proper/Improper Rational Functions, and Partial Fraction Decomposition
+   (exactly ONE question, with an irreducible quadratic factor).
    ========================================================================= */
 const QUESTIONS = [
 {
@@ -685,18 +690,6 @@ const QUESTIONS = [
   ],
   correct:0,
   explain:"The degree of a polynomial is the highest power of \\(x\\) that appears. Here that is \\(x^4\\), so the degree is 4. The leading coefficient is the coefficient attached to that highest-power term, which is 5. (Note the missing \\(x^2\\) term simply has coefficient 0 — it does not change the degree.)"
-},
-{
-  lo:"3.1", diff:"Easy",
-  q:"Which of the following expressions is a polynomial function?",
-  options:[
-    "\\(f(x) = 4x^3 - 2\\sqrt{x} + 1\\)",
-    "\\(f(x) = 3x^2 - 5x + 7\\)",
-    "\\(f(x) = \\dfrac{2}{x} + 3x - 1\\)",
-    "\\(f(x) = x^{3/2} - x + 4\\)"
-  ],
-  correct:1,
-  explain:"A polynomial function contains only terms with whole-number (non-negative integer) exponents on the variable. Option B has exponents 2, 1 and 0 — all whole numbers, so it is a polynomial. Option A contains \\(\\sqrt{x}=x^{1/2}\\), Option C contains \\(2/x = 2x^{-1}\\) (a negative exponent), and Option D contains \\(x^{3/2}\\) (a fractional exponent) — none of these are permitted in a polynomial."
 },
 {
   lo:"3.2", diff:"Moderate",
@@ -721,30 +714,6 @@ const QUESTIONS = [
   ],
   correct:0,
   explain:"By the Remainder Theorem, the remainder equals \\(P(-1)\\). \\(P(-1) = (-1)^3 + k(-1)^2 - 4(-1) + 3 = -1 + k + 4 + 3 = k + 6\\). Setting this equal to 10: \\(k + 6 = 10 \\Rightarrow k = 4\\)."
-},
-{
-  lo:"3.2", diff:"Moderate",
-  q:"Divide \\(P(x) = 3x^4 - 5x^3 + 2x - 8\\) by \\(D(x) = x^2 - 2\\) and express the result in the form \\(\\dfrac{P(x)}{D(x)} = Q(x) + \\dfrac{R(x)}{D(x)}\\).",
-  options:[
-    "\\(3x^2 - 5x + 6 + \\dfrac{-8x+4}{x^2-2}\\)",
-    "\\(3x^2 - 5x + 6 + \\dfrac{8x-4}{x^2-2}\\)",
-    "\\(3x^2 - 5x + 4 + \\dfrac{-8x+4}{x^2-2}\\)",
-    "\\(3x^2 + 5x + 6 + \\dfrac{-8x+4}{x^2-2}\\)"
-  ],
-  correct:0,
-  explain:"Long division: \\(3x^4\\div x^2 = 3x^2\\); subtracting \\(3x^2(x^2-2)\\) leaves \\(-5x^3+6x^2+2x-8\\). Next \\(-5x^3\\div x^2=-5x\\); subtracting \\(-5x(x^2-2)\\) leaves \\(6x^2-8x-8\\). Next \\(6x^2\\div x^2=6\\); subtracting \\(6(x^2-2)\\) leaves \\(-8x+4\\), which has lower degree than \\(D(x)\\), so it is the remainder. Hence \\(Q(x)=3x^2-5x+6\\) and \\(R(x)=-8x+4\\)."
-},
-{
-  lo:"3.3", diff:"Easy",
-  q:"Using the Remainder Theorem, find the remainder when \\(P(x) = 2x^3 + x^2 - 5x + 3\\) is divided by \\((x-1)\\).",
-  options:[
-    "1",
-    "\\(-1\\)",
-    "3",
-    "11"
-  ],
-  correct:0,
-  explain:"By the Remainder Theorem, the remainder equals \\(P(1) = 2(1)^3+(1)^2-5(1)+3 = 2+1-5+3 = 1\\)."
 },
 {
   lo:"3.3", diff:"Moderate",
@@ -843,18 +812,6 @@ const QUESTIONS = [
   explain:"Factor out the common term: \\(P(x) = x^2(x^2-4x+4) = x^2(x-2)^2\\). Written in fully factored form, \\((x-2)\\) appears exactly twice, so the zero \\(x=2\\) has multiplicity 2 (and \\(x=0\\) also has multiplicity 2)."
 },
 {
-  lo:"3.5", diff:"Easy",
-  q:"A polynomial with real coefficients has \\(3 - 2i\\) as one of its zeros. Which of the following must also be a zero?",
-  options:[
-    "\\(3 + 2i\\)",
-    "\\(-3 - 2i\\)",
-    "\\(3 - 2i\\)",
-    "\\(-3 + 2i\\)"
-  ],
-  correct:0,
-  explain:"The Conjugate Pair Zeros Theorem states that for a polynomial with real coefficients, non-real complex zeros always occur in conjugate pairs. The conjugate of \\(3-2i\\) is \\(3+2i\\), so this must also be a zero."
-},
-{
   lo:"3.5", diff:"Challenging",
   q:"Given that \\(1+i\\) is a zero of \\(P(x) = x^3 - 4x^2 + 6x - 4\\), find all remaining zeros.",
   options:[
@@ -867,18 +824,6 @@ const QUESTIONS = [
   explain:"Since \\(P(x)\\) has real coefficients, the conjugate \\(1-i\\) must also be a zero (Conjugate Pair Zeros Theorem). These two zeros correspond to the quadratic factor \\((x-(1+i))(x-(1-i)) = x^2-2x+2\\). Dividing \\(P(x)\\) by \\(x^2-2x+2\\) gives quotient \\(x-2\\), so the remaining real zero is \\(x=2\\). The remaining zeros are \\(1-i\\) and \\(2\\)."
 },
 {
-  lo:"3.5", diff:"Moderate",
-  q:"Form the polynomial of least degree, with real coefficients and leading coefficient 1, having zeros \\(2,\\ -1,\\) and \\(3i\\).",
-  options:[
-    "\\(x^4 - x^3 + 7x^2 - 9x - 18\\)",
-    "\\(x^4 - x^3 - 11x^2 + 9x + 18\\)",
-    "\\(x^3 - x^2 + 7x - 18\\)",
-    "\\(x^4 + x^3 + 7x^2 + 9x - 18\\)"
-  ],
-  correct:0,
-  explain:"Since the polynomial must have real coefficients, the conjugate \\(-3i\\) must also be a zero, giving a degree-4 polynomial. \\(P(x) = (x-2)(x+1)(x-3i)(x+3i) = (x^2-x-2)(x^2+9)\\). Expanding: \\(x^4+9x^2-x^3-9x-2x^2-18 = x^4-x^3+7x^2-9x-18\\)."
-},
-{
   lo:"3.5", diff:"Challenging",
   q:"Given that \\(3i\\) is a zero of \\(P(x) = x^4 - 4x^3 + 14x^2 - 36x + 45\\), find all zeros of \\(P(x)\\).",
   options:[
@@ -889,18 +834,6 @@ const QUESTIONS = [
   ],
   correct:0,
   explain:"Since coefficients are real, \\(-3i\\) is also a zero, giving the factor \\(x^2+9\\). Dividing \\(P(x)\\) by \\(x^2+9\\) gives quotient \\(x^2-4x+5\\). Solving with the quadratic formula: \\(x = \\dfrac{4 \\pm \\sqrt{16-20}}{2} = \\dfrac{4\\pm2i}{2} = 2\\pm i\\). All zeros are \\(3i,\\ -3i,\\ 2+i,\\ 2-i\\)."
-},
-{
-  lo:"3.6", diff:"Easy",
-  q:"Which of the following is an IMPROPER rational function?",
-  options:[
-    "\\(\\dfrac{x^2+3}{x^3-1}\\)",
-    "\\(\\dfrac{2x^3-x+1}{x^2+4}\\)",
-    "\\(\\dfrac{5}{x^2+2x+1}\\)",
-    "\\(\\dfrac{x-1}{x^2+x+6}\\)"
-  ],
-  correct:1,
-  explain:"A rational function is improper when the degree of the numerator is greater than or equal to the degree of the denominator. Option B has numerator degree 3 and denominator degree 2, so it is improper. All the other options have numerator degree strictly less than denominator degree, so they are proper."
 },
 {
   lo:"3.6", diff:"Moderate",
@@ -916,30 +849,6 @@ const QUESTIONS = [
 },
 {
   lo:"3.7", diff:"Moderate",
-  q:"Decompose \\(\\dfrac{5x+7}{(x+1)(x+3)}\\) into partial fractions.",
-  options:[
-    "\\(\\dfrac{1}{x+1}+\\dfrac{4}{x+3}\\)",
-    "\\(\\dfrac{4}{x+1}+\\dfrac{1}{x+3}\\)",
-    "\\(\\dfrac{1}{x+1}-\\dfrac{4}{x+3}\\)",
-    "\\(\\dfrac{2}{x+1}+\\dfrac{3}{x+3}\\)"
-  ],
-  correct:0,
-  explain:"Write \\(\\dfrac{5x+7}{(x+1)(x+3)} = \\dfrac{A}{x+1}+\\dfrac{B}{x+3}\\), so \\(5x+7 = A(x+3)+B(x+1)\\). At \\(x=-1\\): \\(2 = 2A \\Rightarrow A=1\\). At \\(x=-3\\): \\(-8=-2B \\Rightarrow B=4\\). Check: \\((x+3)+4(x+1) = 5x+7\\) ✓. So the decomposition is \\(\\dfrac{1}{x+1}+\\dfrac{4}{x+3}\\)."
-},
-{
-  lo:"3.7", diff:"Challenging",
-  q:"Decompose \\(\\dfrac{x^2+7x+1}{(x-1)^2(x+2)}\\) into partial fractions.",
-  options:[
-    "\\(\\dfrac{2}{x-1}+\\dfrac{3}{(x-1)^2}-\\dfrac{1}{x+2}\\)",
-    "\\(\\dfrac{2}{x-1}-\\dfrac{3}{(x-1)^2}+\\dfrac{1}{x+2}\\)",
-    "\\(\\dfrac{3}{x-1}+\\dfrac{2}{(x-1)^2}-\\dfrac{1}{x+2}\\)",
-    "\\(\\dfrac{2}{x-1}+\\dfrac{3}{(x-1)^2}+\\dfrac{1}{x+2}\\)"
-  ],
-  correct:0,
-  explain:"Write \\(\\dfrac{A}{x-1}+\\dfrac{B}{(x-1)^2}+\\dfrac{C}{x+2}\\), so \\(x^2+7x+1 = A(x-1)(x+2)+B(x+2)+C(x-1)^2\\). At \\(x=1\\): \\(9 = 3B \\Rightarrow B=3\\). At \\(x=-2\\): \\(-9 = 9C \\Rightarrow C=-1\\). Comparing \\(x^2\\) coefficients: \\(A+C=1 \\Rightarrow A=2\\). Recombining \\(2(x-1)(x+2)+3(x+2)-(x-1)^2\\) reconstructs \\(x^2+7x+1\\) exactly, confirming \\(\\dfrac{2}{x-1}+\\dfrac{3}{(x-1)^2}-\\dfrac{1}{x+2}\\)."
-},
-{
-  lo:"3.7", diff:"Moderate",
   q:"Decompose \\(\\dfrac{3x^2-4x+11}{(x-1)(x^2+4)}\\) into partial fractions.",
   options:[
     "\\(\\dfrac{2}{x-1}+\\dfrac{x-3}{x^2+4}\\)",
@@ -949,36 +858,12 @@ const QUESTIONS = [
   ],
   correct:0,
   explain:"Write \\(\\dfrac{A}{x-1}+\\dfrac{Bx+C}{x^2+4}\\), so \\(3x^2-4x+11 = A(x^2+4)+(Bx+C)(x-1)\\). At \\(x=1\\): \\(10 = 5A \\Rightarrow A=2\\). Comparing \\(x^2\\) coefficients: \\(A+B=3 \\Rightarrow B=1\\). Comparing constants: \\(4A-C=11 \\Rightarrow 8-C=11 \\Rightarrow C=-3\\). Recombining confirms the decomposition \\(\\dfrac{2}{x-1}+\\dfrac{x-3}{x^2+4}\\)."
-},
-{
-  lo:"3.7", diff:"Challenging",
-  q:"Decompose \\(\\dfrac{x^3+2x^2+x+1}{(x^2+1)^2}\\) into partial fractions.",
-  options:[
-    "\\(\\dfrac{x+2}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\)",
-    "\\(\\dfrac{x+2}{x^2+1}+\\dfrac{1}{(x^2+1)^2}\\)",
-    "\\(\\dfrac{x-2}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\)",
-    "\\(\\dfrac{2x+1}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\)"
-  ],
-  correct:0,
-  explain:"Write \\(\\dfrac{Ax+B}{x^2+1}+\\dfrac{Cx+D}{(x^2+1)^2}\\), so \\(x^3+2x^2+x+1 = (Ax+B)(x^2+1)+Cx+D = Ax^3+Bx^2+(A+C)x+(B+D)\\). Matching coefficients: \\(A=1\\), \\(B=2\\), \\(A+C=1\\Rightarrow C=0\\), \\(B+D=1\\Rightarrow D=-1\\). This gives \\(\\dfrac{x+2}{x^2+1}+\\dfrac{-1}{(x^2+1)^2} = \\dfrac{x+2}{x^2+1}-\\dfrac{1}{(x^2+1)^2}\\), which recombines exactly to the original numerator."
-},
-{
-  lo:"3.6/3.7", diff:"Challenging",
-  q:"Express \\(\\dfrac{2x^3-x^2-3x+6}{x^2-4}\\) as the sum of a polynomial and its partial fraction decomposition.",
-  options:[
-    "\\(2x-1+\\dfrac{3}{x-2}+\\dfrac{2}{x+2}\\)",
-    "\\(2x+1+\\dfrac{3}{x-2}+\\dfrac{2}{x+2}\\)",
-    "\\(2x-1+\\dfrac{2}{x-2}+\\dfrac{3}{x+2}\\)",
-    "\\(2x-1+\\dfrac{3}{x-2}-\\dfrac{2}{x+2}\\)"
-  ],
-  correct:0,
-  explain:"Since the numerator's degree (3) is at least the denominator's degree (2), this is improper, so we divide first: \\(2x^3-x^2-3x+6\\) divided by \\(x^2-4\\) gives quotient \\(2x-1\\) and remainder \\(5x+2\\), so the expression equals \\(2x-1+\\dfrac{5x+2}{x^2-4}\\). Then decompose \\(\\dfrac{5x+2}{(x-2)(x+2)}=\\dfrac{A}{x-2}+\\dfrac{B}{x+2}\\): at \\(x=2\\), \\(12=4A\\Rightarrow A=3\\); at \\(x=-2\\), \\(-8=-4B\\Rightarrow B=2\\). Final answer: \\(2x-1+\\dfrac{3}{x-2}+\\dfrac{2}{x+2}\\)."
 }
 ];
 
-const TOTAL = QUESTIONS.length; // 25
-const STORAGE_KEY = "mtcf0114_topic3_popquiz_v1";
-const QUIZ_DURATION_SECONDS = 45 * 60; // 45-minute quiz timer
+const TOTAL = QUESTIONS.length; // 15
+const STORAGE_KEY = "mtcf0114_topic3_popquiz_15q_v2";
+const QUIZ_DURATION_SECONDS = 40 * 60; // 40-minute quiz timer
 
 /* ---------------- Teacher access & Supabase config ----------------
    Keep this constant clearly labelled so it can be changed later.
